@@ -24,3 +24,6 @@ venv/
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# Personal help files
+my_help_file.txt
