@@ -1,0 +1,25 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+secret_key.py
+
+
+# Installer logs 
+pip-log.txt 
+pip-delete-this-directory.txt 
+
+# Environments 
+.venv 
+venv/
+
+# Visual Studio Code # 
+.vscode/* 
+!.vscode/settings.json 
+!.vscode/tasks.json 
+!.vscode/launch.json 
+!.vscode/extensions.json 
+.history
