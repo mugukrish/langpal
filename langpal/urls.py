@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from homefeed import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.homefeedview),
+    path('upload/', views.postupload, name='postupload'),
     path('account/', include('account.urls'))
 ]
 

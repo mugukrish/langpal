@@ -1,0 +1,23 @@
+Welcome home {{c_user}}
+
+<form action="account/logout/" method="post">{% csrf_token %}
+    <input type="submit" value="Logout">
+</form>
+
+<br>
+<br>
+
+<form action={% url "postupload" %} method="post">{% csrf_token %}
+    Share someting<input type="text" name="user_post">
+    <input type="submit" value="Post">
+</form>
+
+
+<br>
+<br>
+
+{% for g_posts in post %}
+{{g_posts.user_name}} ----> {{g_posts.post_text}}
+<br>
+
+{% endfor %}
