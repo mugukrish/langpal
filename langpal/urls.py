@@ -23,7 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homefeedview),
     path('upload/', views.postupload, name='postupload'),
-    path('account/', include('account.urls'))
+    path('account/', include('account.urls')),
+    path('wordbox/', include('wordbox.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, 

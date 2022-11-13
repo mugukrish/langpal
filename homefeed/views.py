@@ -12,12 +12,13 @@ def homefeedview(request):
     if request.user.is_authenticated:
         current_user = request.user
         posts = UserPostModel.objects.all()
-        print(posts[0].user_name, posts[0].post_text)
         context = {
             'c_user':current_user,
             'post':posts
         }
         return render(request, 'homefeed/home.html', context)
+    else:
+        return redirect('account_home_view')
     
 
 def postupload(request):

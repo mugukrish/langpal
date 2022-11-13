@@ -1,7 +1,7 @@
 Welcome home {{c_user}}
 
-<form action="account/logout/" method="post">{% csrf_token %}
-    <input type="submit" value="Logout">
+<form action="/account/logout/" method="post">{% csrf_token %}
+    <input type="submit" value="Logout" name = "logout">
 </form>
 
 <br>
