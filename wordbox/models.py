@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 class GlobalMeaningModel(models.Model):
@@ -7,3 +10,14 @@ class GlobalMeaningModel(models.Model):
 
     def __str__(self):
         return self.word
+
+
+class UserMeaningHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    word_searched = models.JSONField()
+    is_favourite = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
+
+

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 import requests
 import json
 from django.http import JsonResponse
-from .models import GlobalMeaningModel
+from .models import GlobalMeaningModel, UserMeaningHistory
 
 
 # Create your views here.
@@ -63,6 +63,10 @@ def returnmeaningview(request):
             try:
                 to_save = GlobalMeaningModel.objects.create(word=word, meaning=json.dumps(final_meaning_data))
                 to_save.save()
+
+                history_store = UserMeaningHistory.objects.create(user=request.user, word_searched=word)
+                history_store.save()
+                
             except Exception as ex:
                 print(ex)
 
