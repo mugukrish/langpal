@@ -21,7 +21,8 @@ from homefeed import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.homefeedview),
+    path('', views.homefeedview, name='homefeed'),
+    path('test/', views.temptestview),
     path('upload/', views.postupload, name='postupload'),
     path('account/', include('account.urls')),
     path('wordbox/', include('wordbox.urls')),

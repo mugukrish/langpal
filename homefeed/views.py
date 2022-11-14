@@ -6,6 +6,12 @@ from account import views
 from .models import UserPostModel
 
 # Create your views here.
+def temptestview(request):
+    context = {
+        'object': request.user.is_authenticated
+    }
+    print(request.user, request.user.is_authenticated)
+    return render(request, 'base.html', context)
 
 
 def homefeedview(request):

@@ -1,8 +1,10 @@
-Welcome home {{c_user}}
+{% extends "base.html" %}
 
-<form action="/account/logout/" method="post">{% csrf_token %}
-    <input type="submit" value="Logout" name = "logout">
-</form>
+{% block content %}
+
+
+Welcome {{c_user}} !
+
 
 <br>
 <br>
@@ -21,3 +23,6 @@ Welcome home {{c_user}}
 <br>
 
 {% endfor %}
+
+
+{% endblock content %}

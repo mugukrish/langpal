@@ -1,22 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
 <form action="" method="get">
     <input type="text" name="meaning_to_search">
     <input type="submit" value="Search">
 </form>
 
-{{object.text}}
-{{object.message}}
-{{object.resolution}}
+<div>
+    {{object.text}}
+    {{object.message}}
+    {{object.resolution}}
 
-{{object.text}}
-<br>
-{{object.audio}}
-<br>
-
-<ol>
-{% for meanings_l in object.meanings %}
-<li>{{meanings_l.partsofspeech}}-->{{meanings_l.meaning}}</li>
-{% endfor %}
-</ol>
+    {{object.text}}
+    <br>
+    {{object.audio}}
+    <br>
 
 
+    <ol>
+    {% for meanings_l in object.meanings %}
+    <li>{{meanings_l.partsofspeech}}-->{{meanings_l.meaning}}</li>
+    {% endfor %}
+    </ol>
+
+</div>
+
+
+{% endblock content %}
 
