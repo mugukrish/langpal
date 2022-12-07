@@ -10,7 +10,6 @@ def temptestview(request):
     context = {
         'object': request.user.is_authenticated
     }
-    print(request.user, request.user.is_authenticated)
     return render(request, 'base.html', context)
 
 

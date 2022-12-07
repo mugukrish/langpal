@@ -3,7 +3,7 @@
 <head>
 <title>langpal| Welcome</title>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 {% load static %}
 <link rel="stylesheet" href={% static 'base.css' %}>
@@ -28,9 +28,9 @@ body {font-family: "Raleway", Arial, sans-serif}
     
     {% if request.user.is_authenticated is True %}
     <a href="{% url 'logout_view' %}" class="w3-right w3-button w3-white">Logout</a>
-    <a href="#about" class="w3-right w3-button w3-white">About</a>
-    <a href="#about" class="w3-right w3-button w3-white">Wordpal</a>
-    <a href="#about" class="w3-right w3-button w3-white">Practice</a>
+    <a href="{% url 'about_home' %}" class="w3-right w3-button w3-white">About</a>
+    <a href="{% url 'wordapp_home'%}" class="w3-right w3-button w3-white">Wordpal</a>
+    <a href="{% url 'practicehome' %}" class="w3-right w3-button w3-white">Practice</a>
     {% endif %}
   </header>
     

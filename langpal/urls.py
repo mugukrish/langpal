@@ -26,6 +26,9 @@ urlpatterns = [
     path('upload/', views.postupload, name='postupload'),
     path('account/', include('account.urls')),
     path('wordbox/', include('wordbox.urls')),
+    path('practice/', include('practice.urls')),
+    path('about/', include('about.urls')),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, 
