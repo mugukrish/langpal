@@ -12,3 +12,7 @@ def create_new_room(request):
         "roomname": 'test'
     }
     return render(request, 'practice/createroom.html', context)
+
+def learn_by_reading(request):
+    context = {}
+    return render(request, 'practice/learnbyreading.html', context)
