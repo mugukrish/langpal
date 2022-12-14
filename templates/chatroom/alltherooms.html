@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+Available Chatrooms
+
+<br>
+<li>
+    {% for room in objects %}
+    <ol>
+        {{room.name}} <a href="{% url 'join_room' room.slug %}"><button>Join</button></a> 
+    </ol>
+    {% endfor %}
+</li>
+
+
+{% endblock content %}

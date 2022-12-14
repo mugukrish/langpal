@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{{room.slug|json_script:"room_name_id"}}
+{{request.user.usernamne|json_script:"user_name_id"}}
+
+<h1>Welcome to {{room.name}}</h1>
+
+<div id="message-display">
+</div>
+
+<textarea id="all-texts" cols="80" rows="10"></textarea>
+<input type="text" id="text-message">
+<button id="submit-text" >Submit</button>
+
+<script>
+    const roomName = JSON.parse(document.getElementById("room_name_id").textContent); 
+    const userName = JSON.parse(document.getElementById("user_name_id").textContent);
+    const chatSocket = new WebSocket(
+        'ws://'
+        +window.location.host
+        +'/ws/'
+        +roomName
+        +'/'
+    );
+
+    chatSocket.onmessage = function(e){
+        const data = JSON.parse(e.data);
+        if (data.user_message){
+            document.querySelector('#all-texts').innerHTML += (data.user_message+ '\n')
+        }
+        else{
+            document.querySelector('#message-display').innerHTML = (data.tester)
+        }
+
+        
+    }
+
+    chatSocket.onclose = function(e){
+        const data = JSON.parse(e.data);
+    }
+
+
+    // below send function will send data to backend consumer.py
+    document.querySelector("#submit-text").onclick = function (){
+        const textMessageDom = document.querySelector('#text-message');
+        const textMessage = textMessageDom.value;
+        console.log(textMessage);
+        chatSocket.send(JSON.stringify({
+            'message':textMessage
+        }));
+
+        textMessageDom.value = '';
+        
+    
+    };
+
+     
+
+</script>
+
+
+{% endblock content %}

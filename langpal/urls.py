@@ -28,6 +28,8 @@ urlpatterns = [
     path('wordbox/', include('wordbox.urls')),
     path('practice/', include('practice.urls')),
     path('about/', include('about.urls')),
+    path('chatroom/', include('chatroom.urls')),
+
 
 ]
 
