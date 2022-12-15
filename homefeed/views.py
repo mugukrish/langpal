@@ -32,3 +32,5 @@ def postupload(request):
                                     post_text=request.POST['user_post'])
         post_created.save()
         return redirect(homefeedview)
+
+

@@ -3,12 +3,13 @@
 {% block content %}
 
 {{room.slug|json_script:"room_name_id"}}
-{{request.user.usernamne|json_script:"user_name_id"}}
+{{user|json_script:"user_name_id"}}
 
-<h1>Welcome to {{room.name}}</h1>
+<h1>Welcome to {{room.name}} {{request.user}}</h1>
 
 <div id="message-display">
 </div>
+
 
 <textarea id="all-texts" cols="80" rows="10"></textarea>
 <input type="text" id="text-message">
@@ -28,7 +29,7 @@
     chatSocket.onmessage = function(e){
         const data = JSON.parse(e.data);
         if (data.user_message){
-            document.querySelector('#all-texts').innerHTML += (data.user_message+ '\n')
+            document.querySelector('#all-texts').innerHTML += (userName+'---->'+data.user_message+ '\n')
         }
         else{
             document.querySelector('#message-display').innerHTML = (data.tester)
@@ -48,7 +49,8 @@
         const textMessage = textMessageDom.value;
         console.log(textMessage);
         chatSocket.send(JSON.stringify({
-            'message':textMessage
+            'message':textMessage,
+            'username':userName
         }));
 
         textMessageDom.value = '';

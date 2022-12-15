@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import ChatRoomsList
+from .models import ChatRoomsList, UserMessage
 # Create your views here.
 
 
@@ -13,5 +13,8 @@ def allroomlist(request):
 def joinroom(request, slug):
     context = {}
     room = ChatRoomsList.objects.get(slug=slug)
+    context['user'] = str(request.user)
     context['room'] = room
+    context['old_messages'] = UserMessage.objects.filter(room=room)[:25]
+
     return render(request, 'chatroom/joinroom.html', context)
