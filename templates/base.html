@@ -6,38 +6,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 {% load static %}
-<link rel="stylesheet" href={% static 'base.css' %}>
+ <!-- <link rel="stylesheet" href={% static 'base.css' %}> -->
+<link rel="stylesheet" href={% static 'main.css' %}>
 
-<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
+<script src={% static 'htmx.min.js' %}></script>
 
-<style>
-body {font-family: "Raleway", Arial, sans-serif; background-color: grey}
-.w3-row img {margin-bottom: -8px}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+
 </head>
 
-<body>
+<body class="bg-gradient-to-l from-gray-900 via-purple-900 to-violet-600">
 
-<!-- !PAGE CONTENT! -->
-<div class="w3-content" style="max-width:1500px">
+  <nav class="relative container mx-auto bg-red-500 p-6 text-4xl"> 
 
-  <!-- Header -->
-  <header class="w3-container w3-xlarge w3-padding-24">
-    <a href="{% url 'homefeed' %}" class="w3-left w3-button w3-white">langpal</a>
+    <div class="flex items-center justify-between">
 
-    
-    {% if request.user.is_authenticated is True %}
-    <a href="{% url 'logout_view' %}" class="w3-right w3-button w3-white">Logout</a>
-    <a href="{% url 'about_home' %}" class="w3-right w3-button w3-white">About</a>
-    <a href="{% url 'wordapp_home'%}" class="w3-right w3-button w3-white">Wordpal</a>
-    <a href="{% url 'learnbyreading' %}" class="w3-right w3-button w3-white">Read</a>
-    <a href="{% url 'practicehome' %}" class="w3-right w3-button w3-white">Practice</a>
+      <div>
+        <a href="{% url 'homefeed' %}" class="text-4xl">langpal</a>
+      </div>
+      
+      {% if request.user.is_authenticated is True %}
+      <ul class="hidden md:flex gap-6">
+        <li><a href="{% url 'practicehome' %}" class="text-3xl">Practice</a></li>
+        <li><a href="{% url 'wordapp_home'%}" class="text-3xl">Wordpal</a></li>
+        <li><a href="{% url 'learnbyreading' %}" class="text-3xl">Read</a></li>
+        <li><a href="{% url 'about_home' %}" class="text-3xl">About</a></li>
+        <li><a href="{% url 'logout_view' %}" class="text-3xl">Logout</a></li>
+      </ul>
+
+      <button id="menu-button" class="md:hidden ">
+        <div id="menu-open" class="">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
+          </svg>  
+        </div>
+           
+        
+        <div id="menu-close" class="hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+        
+        
+      </button>
+
+    </div>
+
+    <!-- menu -->
+    <div class="md:hidden ">
+      <div id="menu" class="hidden absolute flex flex-col items-center self-end  py-8 mt-10 bg-white
+      space-y-10 sm:w-auto sm:self-center left-3 right-3
+      drop-shadow-md">
+        <ul class="">
+          <li><a href="{% url 'practicehome' %}" class="text-3xl">Practice</a></li>
+          <li><a href="{% url 'wordapp_home'%}" class="text-3xl">Wordpal</a></li>
+          <li><a href="{% url 'learnbyreading' %}" class="text-3xl">Read</a></li>
+          <li><a href="{% url 'about_home' %}" class="text-3xl">About</a></li>
+          <li><a href="{% url 'logout_view' %}" class="text-3xl">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  
     {% endif %}
-  </header>
 
+  </nav>
+
+
+
+  <!-- <nav class="relative container mx-auto p-6"> -->
+  
+  <!-- <nav class="flex justify-between mx-auto p-6">
+   
+    <div class="flex item-center ">
+       <!-- logo
+       <div class="text-left">
+        <a href="{% url 'homefeed' %}" class="text-4xl">langpal</a>
+
+       </div>
     
-<!-- End Page Content -->
-</div>
+      {% if request.user.is_authenticated is True %}
+      <ul class="flex flex-row items-center align-middle gap-4 text-3xl">
+        
+        <li><a href="{% url 'practicehome' %}" class="w3-right w3-button w3-white">Practice</a></li>
+        <li><a href="{% url 'wordapp_home'%}" class="w3-right w3-button w3-white">Wordpal</a></li>
+        <li><a href="{% url 'learnbyreading' %}" class="w3-right w3-button w3-white">Read</a></li>
+        <li><a href="{% url 'about_home' %}" class="w3-right w3-button w3-white">About</a></li>
+        <li><a href="{% url 'logout_view' %}" class="w3-right w3-button w3-white">Logout</a></li>
+      </ul>
+    
+    {% endif %}
+      
+
+    </div>
+
+  </nav> -->
+
+  
+    
+     
+
 
 
 <!-- Extended templates -->
@@ -57,4 +127,11 @@ body {font-family: "Raleway", Arial, sans-serif; background-color: grey}
 </footer>
  
 </body>
+
+{% block headcontent %}
+  
+{% endblock headcontent %}
+
+<script src={% static 'homefeed/mobilemenu.js' %}></script>
+
 </html>

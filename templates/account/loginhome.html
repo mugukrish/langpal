@@ -2,18 +2,19 @@
 
 {% block content %}
 
+<!-- welcome message -->
+<div class="p-6 place-items-center">
+    <h1 class="text-center text-5xl p-6">Welcome<h1>
+    <p class="text-center p-6 text-3xl" >Hi ther, this is where the welcome message goes</p>
+</div>
 
 
-Welcome {{c_user}}
+<div class="grid place-items-center p-3 gap-6">
+   
+    <button class="bg-gradient-to-r from-purple-400 to-purple-300 text-white font-bold py-2 px-4 rounded "> <a href="login/"> Login </a> </button>
+    <button class="bg-gradient-to-r from-purple-400 to-purple-300 text-white font-bold py-2 px-4 rounded "> <a href="signup/"> Register </a> </button>
 
-<form action="login/">
-    <input type="submit", value="login">
-</form>
+</div>
 
-<br><br>
-
-<form action="signup/">
-    <input type="submit", value="register">
-</form>
 
 {% endblock content %}

@@ -1,24 +1,81 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block headcontent %}
+<script src={% static 'account/user_registration.js' %}></script>
+
+{% endblock headcontent %}
+
+
 {% block content %}
 
 
-<form method="post"> {% csrf_token %}
 
-    Username<input type="text" name="username">
-    <br>
-    Birthday<input type="date" name="dob">
-    <br>
-    Email<input type="email" name="email">
-    <br>
-    Password<input type="password" name="password1">
-    <br>
-    Renter Password<input type="password" name="password2">
+<div class=" flex items-center justify-center p-6 ">
+    
+    <form id="signup_form" method="post" class="bg-violet-300 shadow-md rounded px-8 pb-8 pt-8 mb-4 "> {% csrf_token %}
+        <div>
+            {% for error, error_value in object.items %}
+                <p class="italic text-red-500">{{error_value}}</p>
+            {% endfor %}
+        </div>
 
-    <br>
-    <br>
-    Register<input type="submit">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+          Username
+        </label>
+        <input id="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="username" type="text" required
+        hx-post={% url 'check_username' %} hx-target="#username_check" hx-trigger="keyup"
+        >
+        <div class="text-xs" id="username_check"></div>
+        <div class="check_from_js text-xs text-red-500 italic" id="check_from_js"></div>
 
-</form>
+    </div>
+        
+      <div class="mb-4"> 
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="bod">
+          Bate of Birth
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="dob" type="date" >
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+          Email
+        </label>
+        <input id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="email" type="email" required
+        hx-post={% url 'check_email' %} hx-target="#email_check" hx-trigger="keyup"
+        >
+        <div class="text-xs" id="email_check"></div>
+        <div class="check_from_js text-xs text-red-500 italic" id="check_from_js"></div>
+     </div>
+
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password1">
+          Password
+        </label>
+        <input id="password1" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" name="password1" type="password" placeholder="******************">
+        <div class="check_from_js text-xs text-red-500 italic" id="check_from_js"></div>
+      </div>
+
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password2">
+          Re-enter Password
+        </label>
+        <input id="password2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" name="password2" type="password" placeholder="******************">
+        <div class="check_from_js text-xs text-red-500 italic" id="check_from_js"></div>
+      </div>
+
+      <div class="place-items-center">
+        <button class="place-items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+          Register
+        </button>
+      </div>
+    </form>
+
+</div>
+  
+
 
 {% endblock content %}
