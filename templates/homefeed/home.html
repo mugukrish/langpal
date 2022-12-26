@@ -1,70 +1,109 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+<!-- below will be passed to the base html. Reserved only for JS -->
+{% block headcontent %}
+<script src={% static 'homefeed/mobilehome.js' %}></script>
+<script src={% static 'homefeed/homemain.js' %}></script>
+
+{% endblock headcontent %}
+
+
+
 {% block content %}
 
+<div class="container mx-auto p-3 ">
 
-<div class="main-home" style="width: 70%; float: left; ">
-
-    {% load static %}
-    <div class="w3-card-4" style="width: 25%; display: inline-block; float:left; margin: 20px;">
-        <img src="{% get_media_prefix %}blank-profile-picture.png" alt="Avatar" style="width:100%">
-        <div class="user-name-bio" >
-            <h4><b>{{c_user}}</b></h4> 
-            <p>Bio will come here</p> 
-        </div>
+    <div class="p-6" >
+        <form class="bg-purple-400 shadow-md rounded px-8 pt-6 pb-8 mb-4"  action={% url "postupload" %} method="post">{% csrf_token %}
+            <textarea class="p-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"  name="user_post", placeholder="Share something..." rows="6"></textarea>
+            <div class="flex items-center justify-between">
+                <button class="p-2 place-items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" >Post</button>
+            
+                <button id="menu-button" class="right">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+                      </svg>                      
+                </button>
+            </div>
+        </form>       
     </div>
 
 
 
-    <div class="the-home" style="float: right; width: 70%;"> 
-
+    <div><p class="text-3xl mb-6 text-center">Trending posts</p></div>
     
-        <div class="w3-card-4" style="width: 90%; padding: 1%; float: right; margin: 30px;" >
 
-            <div class="upload-post">
-                <form action={% url "postupload" %} method="post">{% csrf_token %}
-                    <div><input type="text" name="user_post", placeholder="Share something..."></div>
-                    <div><input type="submit" value="Post"></div>
-                </form>
+    <div>
 
+        <!-- for card -->
+        {% for g_posts in post %}
+
+        <div class="p-3 bg-slate-400 rounded-xl mb-6" >
+            <div class="flex items-center">
+                <img class="p-2 shadow rounded-full w-20 border-none" src={% static "img/test.jpg" %} alt="user-image">
+                <p class="p-2 items-center"> {{g_posts.user_name}}</p>
+                <p class="float-right">{{g_posts.posted_on}}</p>
+            </div>
+
+            <div class="pt-2 grid place-items-center">
+                <img class="h-60 object-cover rounded-xl" src="{% static "img/test.jpg" %}" alt="user_post">
             </div>
             
-        </div>
+            <div class="p-6">{{g_posts.post_text}}</div>
 
-        
-        <!-- <div class="filter-at-home" style="position:absolute;"> 
-            Filter
-
-        </div> -->
-
-
-        <div class="post-list-place" style="float:right; width:100%;"> 
-
-            {% for g_posts in post %}
-            <div class="w3-card-2" style="padding: 16px; margin-bottom: 20px; margin: 20px;">
-                <div class="individual-post">
-                    <div class="user-details">
-                        {{g_posts.user_name}}
-                    </div>
-                    
-                    <div class="post-details">
-                        {{g_posts.post_text}}
-                    </div>
-
-                    <div class="post-actions">
-                        up down
-                    </div>
-                    
-                    
+            <div class="flex p-2" >
+                <div class="flex p-2">
+                    <button id="upvote-button" hx-post={% url 'upvote' g_posts.id %} hx-target="#upvote-counthtmx{{g_posts.id}}">
+                        
+                        {% if g_posts.vote == 'up' %}
+                        <div id="post-vote-color-up" class="bg-green-500 rounded">
+                        {% else %}
+                        <div id="post-vote-color-up">
+                        {% endif %}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.904M14.25 9h2.25M5.904 18.75c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 01-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 10.203 4.167 9.75 5 9.75h1.053c.472 0 .745.556.5.96a8.958 8.958 0 00-1.302 4.665c0 1.194.232 2.333.654 3.375z" />
+                            </svg>
+                        </div>
+                    </button>
+                    <div id="upvote-counthtmx{{g_posts.id}}" hx-get={% url 'upvote' g_posts.id %}  hx-trigger="load" hx-target="#upvote-counthtmx{{g_posts.id}}"> </div>
                 </div>
+                
+                <!-- downvote -->
+                <div class="flex p-2">
+                    {% if g_posts.vote == 'down' %}
+                    <div id="post-vote-color-down" class="bg-red-500 rounded">
+                    {% else %}
+                    <div id="post-vote-color-down">
+                    {% endif %}
+                        <button id="downvote-button" hx-post={% url 'downvote' g_posts.id %} hx-trigger="click" hx-target="#downvote-counthtmx{{g_posts.id}}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 15h2.25m8.024-9.75c.011.05.028.1.052.148.591 1.2.924 2.55.924 3.977a8.96 8.96 0 01-.999 4.125m.023-8.25c-.076-.365.183-.75.575-.75h.908c.889 0 1.713.518 1.972 1.368.339 1.11.521 2.287.521 3.507 0 1.553-.295 3.036-.831 4.398C20.613 14.547 19.833 15 19 15h-1.053c-.472 0-.745-.556-.5-.96a8.95 8.95 0 00.303-.54m.023-8.25H16.48a4.5 4.5 0 01-1.423-.23l-3.114-1.04a4.5 4.5 0 00-1.423-.23H6.504c-.618 0-1.217.247-1.605.729A11.95 11.95 0 002.25 12c0 .434.023.863.068 1.285C2.427 14.306 3.346 15 4.372 15h3.126c.618 0 .991.724.725 1.282A7.471 7.471 0 007.5 19.5a2.25 2.25 0 002.25 2.25.75.75 0 00.75-.75v-.633c0-.573.11-1.14.322-1.672.304-.76.93-1.33 1.653-1.715a9.04 9.04 0 002.86-2.4c.498-.634 1.226-1.08 2.032-1.08h.384" />
+                            </svg>  
+                        </button>
+                    </div>
+                    
+                    <div id="downvote-counthtmx{{g_posts.id}}" hx-get={% url 'downvote' g_posts.id %} hx-trigger="load" hx-target="#downvote-counthtmx{{g_posts.id}}"></div>
+    
+                </div>
+                 
+                  
             </div>
-            {% endfor %}
 
         </div>
+        {% endfor %}
+        
 
+<!-- <div id="objectDetail"
+    hx-get={% url 'testhtmx' 1 %}
+    hx-target="#load-more"
+    hx-trigger="click">
+    <button>loadmore</button>
+</div>
 
-    </div>
-    
-</div> 
+<div id="load-more">loadmore</div> -->
+
+</div>
 
 {% endblock content %}

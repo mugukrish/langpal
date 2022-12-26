@@ -17,9 +17,9 @@
 
 </head>
 
-<body class="bg-gradient-to-l from-gray-900 via-purple-900 to-violet-600">
+<body class="bg-gradient-to-l from-gray-900 via-purple-900 to-violet-600" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-  <nav class="relative container mx-auto bg-red-500 p-6 text-4xl"> 
+  <nav class="fixed top-0 left-0 right-0 w-[100%] mx-auto bg-red-500 p-6 text-4xl"> 
 
     <div class="flex items-center justify-between">
 
@@ -50,7 +50,6 @@
           </svg>
         </div>
         
-        
       </button>
 
     </div>
@@ -75,43 +74,7 @@
   </nav>
 
 
-
-  <!-- <nav class="relative container mx-auto p-6"> -->
-  
-  <!-- <nav class="flex justify-between mx-auto p-6">
-   
-    <div class="flex item-center ">
-       <!-- logo
-       <div class="text-left">
-        <a href="{% url 'homefeed' %}" class="text-4xl">langpal</a>
-
-       </div>
-    
-      {% if request.user.is_authenticated is True %}
-      <ul class="flex flex-row items-center align-middle gap-4 text-3xl">
-        
-        <li><a href="{% url 'practicehome' %}" class="w3-right w3-button w3-white">Practice</a></li>
-        <li><a href="{% url 'wordapp_home'%}" class="w3-right w3-button w3-white">Wordpal</a></li>
-        <li><a href="{% url 'learnbyreading' %}" class="w3-right w3-button w3-white">Read</a></li>
-        <li><a href="{% url 'about_home' %}" class="w3-right w3-button w3-white">About</a></li>
-        <li><a href="{% url 'logout_view' %}" class="w3-right w3-button w3-white">Logout</a></li>
-      </ul>
-    
-    {% endif %}
-      
-
-    </div>
-
-  </nav> -->
-
-  
-    
-     
-
-
-
-<!-- Extended templates -->
-<div>
+<div class="mt-28">
 
   {% block content %}
   
@@ -128,10 +91,11 @@
  
 </body>
 
+
+<script src={% static 'homefeed/mobilemenu.js' %}></script>
+
 {% block headcontent %}
   
 {% endblock headcontent %}
-
-<script src={% static 'homefeed/mobilemenu.js' %}></script>
 
 </html>
