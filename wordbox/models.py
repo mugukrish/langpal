@@ -20,4 +20,8 @@ class UserMeaningHistory(models.Model):
     def __str__(self):
         return self.user.username
 
+class MeaningSentences(models.Model):
+    word = models.CharField(max_length=100)
+    sentence = models.TextField(null=False)
+
 

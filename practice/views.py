@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-
-# Create your views here.
+from wordbox.models import MeaningSentences
+from random import choice
 
 def practice_home(request):
     if request.method == 'POST':
@@ -14,5 +14,9 @@ def create_new_room(request):
     return render(request, 'practice/createroom.html', context)
 
 def learn_by_reading(request):
-    context = {}
+    data = MeaningSentences.objects.values_list('id', flat=True)
+    random_id = choice(data)
+    random_obj = MeaningSentences.objects.get(id=random_id).sentence
+    context = {"sentence":random_obj}
+
     return render(request, 'practice/learnbyreading.html', context)

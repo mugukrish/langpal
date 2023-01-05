@@ -1,83 +1,42 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+<!-- below will be passed to the base html. Reserved only for JS -->
+{% block headcontent %}
+
+<script src={% static 'practice/learnbyreading.js' %}></script>
+
+
+{% endblock headcontent %}
+
+
 {% block content %}
 
+<div class="container mx-auto p-3 bg-white rounded mb-4">
+    
+    <div >
+        <div class="p-3">
+            <textarea id="toread" rows="5" class="w-full h-auto" type="text" > {{sentence}} </textarea>
+        </div>
+        
+        <div class="p-3">
+            <button onclick="readforme()" class="p-2 place-items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Read</button>
+        </div>
+        
+    </div>
+    
+    <div>
+        <button id="button_sel">Start</button>
+    </div>
+    
+    
+    <div id="result"> 
+    </div>
+    
 
-<div>
-    <input id="toread" type="text" value="This is where the sentence will be displayed.">
-    <button onclick="readforme()">Read</button>
 </div>
 
-<div>
-    <button id="button_sel">Start</button>
-</div>
-
-
-<div id="result"> 
-</div>
-
-
-<Script>
-
-    function readforme(){
-        const synth = window.speechSynthesis;
-        const utterThis = new SpeechSynthesisUtterance(document.getElementById("toread").value);
-        synth.speak(utterThis);
-
-    }
-
-    const button = document.getElementById("button_sel");
-    const result = document.getElementById("result");
-    console.log(button, result)
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if(SpeechRecognition){
-
-        let speechRecognition = new webkitSpeechRecognition();
-        let listening = false;
-
-        const start = () => {
-            console.log("came to start")
-            speechRecognition.start();
-            button.textContent = "Stop listening";
-        };
-
-        const stop = () => {
-            speechRecognition.stop();
-            button.textContent = "Start";
-
-        };
-
-        const onResult = event => {
-        result.innerHTML = "";
-        for (const res of event.results) {
-            const text = document.createTextNode(res[0].transcript);
-            const p = document.createElement("p");
-            if (res.isFinal) {
-            p.classList.add("final");
-            }
-            p.appendChild(text);
-            result.appendChild(p);
-        }
-        }
-
-        speechRecognition.continuous = true;
-        speechRecognition.interimResults = true;
-        speechRecognition.addEventListener("result", onResult);
-
-        button.addEventListener("click", () => {
-            listening ? stop() : start();
-            listening = !listening;
-          });
-
-    }
-
-    else{
-        console.log("Not Supported");
-    }
-
-</Script>
 
 
 {% endblock content %}

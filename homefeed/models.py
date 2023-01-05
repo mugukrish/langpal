@@ -9,13 +9,23 @@ User = get_user_model()
 
 # Create your models here.
 class UserPostModel(models.Model):
+
+    def content_file_name(instance, filename):
+        name, ext = filename.rsplit('.', 1)
+        file_path = f'posts/{instance.user_name}/{instance.id}+{name}.{ext}'
+        return file_path
+
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     post_text = models.TextField()
     user_name = models.ForeignKey(User, on_delete=models.CASCADE)
-    image_post = models.ImageField(upload_to='posts/', null=True)
+    image_post = models.ImageField(upload_to=content_file_name, null=True)
     posted_on = models.DateField(default=datetime.datetime.now)
     upvote_count = models.IntegerField(default=0)
     downvote_count = models.IntegerField(default=0)
+
+
+    
 
     # def __str__(self):
     #     return self.user_name

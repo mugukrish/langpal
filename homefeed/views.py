@@ -9,6 +9,10 @@ from django.contrib.auth.models import User
 from account import views
 from .models import UserPostModel, PostVoteUpdate
 
+import os
+
+from django.conf import settings
+
 
 
 def check_what_vote(post_id, user_id):
@@ -19,6 +23,17 @@ def check_what_vote(post_id, user_id):
     else:
         return None
     
+
+def delete_post(request, **kwargs):
+    id = kwargs['pk']
+    post_details = UserPostModel.objects.get(id=id)
+    file_name = post_details.image_post
+    post_details.delete()
+    if file_name:
+        os.remove(os.path.join(settings.MEDIA_ROOT, str(file_name)))
+    return  HttpResponse(f"<div><div>")
+
+
 
 
 def check_and_update_post_votes(post_id, user_id, vote_type):
@@ -84,26 +99,8 @@ def postdownvoteupdate(request, **kwargs):
             post_details.save()
         
         return HttpResponse(f"<div>{downvote_current}<div>")
-    
 
 
-
-
-def testhtmx(request, *args, **kwargs):
-    if request.user.is_authenticated:
-        current_user = request.user
-        posts = UserPostModel.objects.all()
-        paginator = Paginator(posts, 3)
-
-        context = {
-            'c_user':current_user,
-            'post':paginator.page(kwargs['page'])
-        }
-        return render(request, 'homefeed/home.html', context)
-    
-    
-
-# Create your views here.
 def temptestview(request):
     context = {
         'object': request.user.is_authenticated
@@ -116,12 +113,12 @@ def homefeedview(request):
         current_user = request.user
         posts = UserPostModel.objects.all()
         # paginator = Paginator(posts, 3)
-
         test_data = []
 
         for i in posts:
             data_to_append = i.__dict__
             data_to_append["vote"] = check_what_vote(i.id, request.user)
+            data_to_append["user_name"] = i.user_name
             test_data.append(data_to_append)
 
         paginator = Paginator(test_data, 3)
@@ -152,8 +149,16 @@ def homefeedview(request):
 def postupload(request):
     if request.method == 'POST':
         user_object = User.objects.get(username=request.user)
-        post_created = UserPostModel(user_name=user_object,
-                                    post_text=request.POST['user_post'])
+        print(request.FILES)
+        if 'image_upload' in request.FILES:  
+            post_created = UserPostModel(user_name=user_object,
+                                    post_text=request.POST['user_post'],
+                                    image_post=request.FILES['image_upload'])
+
+        else:
+            post_created = UserPostModel(user_name=user_object,
+                                        post_text=request.POST['user_post'])
+        
         post_created.save()
         return redirect(homefeedview)
 

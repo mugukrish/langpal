@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect
 import requests
 import json
 from django.http import JsonResponse
-from .models import GlobalMeaningModel, UserMeaningHistory
+from .models import GlobalMeaningModel, UserMeaningHistory, MeaningSentences
+from django.contrib.auth.models import User
 
-
-# Create your views here.
 
 def returnmeaningview(request):
     context = {'object':{}}
@@ -13,21 +12,25 @@ def returnmeaningview(request):
 
     if 'meaning_to_search' in request.GET:
         word = request.GET['meaning_to_search'].strip()
+
+        # try to get meaning data from GlobalMeaningModel  
         try:
             final_meaning_data = GlobalMeaningModel.objects.get(word=word)
-            context = {'object': json.loads(final_meaning_data.meaning)}
-            print('got from database')
+            context = {'object': json.loads(final_meaning_data.meaning), 'word':word}
             return render(request, 'wordbox/meaning.html', context)
         except Exception as ex:
             print(ex)
 
-        
+        # getting data from API
         final_meaning_data = {}
-        context = {'object': final_meaning_data}
+        context = {'object': final_meaning_data, 'word':word}
         new_one = True
         all_meanings = []
-        endpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'+word
-        get_request = requests.get(endpoint).json()
+        try:
+            endpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'+word
+            get_request = requests.get(endpoint).json()
+        except:
+            return redirect(request.path)
 
         for item in get_request:
             #if no data found then a resolution dict is passed
@@ -60,12 +63,21 @@ def returnmeaningview(request):
                                                 'meaning':definition.get('definition')})
 
             final_meaning_data['meanings'] = all_meanings
-            try:
-                to_save = GlobalMeaningModel.objects.create(word=word, meaning=json.dumps(final_meaning_data))
-                to_save.save()
 
-                history_store = UserMeaningHistory.objects.create(user=request.user, word_searched=word)
+            # saving a new meaning to a local database to reduce API call in future
+            try:
+                GlobalMeaningModel.objects.create(word=word, meaning=json.dumps(final_meaning_data))
+
+                for meanings in all_meanings:    
+                    if ('(' not in meanings['meaning'] and len(meanings['meaning'].split())>6):
+                        MeaningSentences.objects.create(word=word, sentence=meanings['meaning'])
+
+
+                user_details = User.objects.get(username=request.user)
+                history_store = UserMeaningHistory.objects.create(user=user_details, word_searched=word)
                 history_store.save()
+
+
                 
             except Exception as ex:
                 print(ex)
