@@ -1,15 +1,20 @@
 room
 <script src="https://meet.jit.si/external_api.js"></script>
+
+<script>
+    var domain = "meet.jit.si";
+    var options = {
+        roomName: "call",
+        width: 700,
+        height: 700,
+        parentNode: undefined,
+        configOverwrite: {startWithVideoMuted: true},
+        interfaceConfigOverwrite: {},
         
-        <script>
-            var domain = "meet.jit.si";
-            var options = {
-                roomName: "JitsiMeetAPIExample",
-                width: 700,
-                height: 700,
-                parentNode: undefined,
-                configOverwrite: {},
-                interfaceConfigOverwrite: {}
+        userInfo: {
+            email: 'email@jitsiexamplemail.com',
+            displayName: 'John Doe'
             }
-            var api = new JitsiMeetExternalAPI(domain, options);
-        </script>
+    }
+    var api = new JitsiMeetExternalAPI(domain, options);
+</script>

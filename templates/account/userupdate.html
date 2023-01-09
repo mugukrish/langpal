@@ -15,6 +15,23 @@
 
 </script>
 
+<script>
+    const file_upload = document.getElementById("myFile")
+    const msg = document.getElementById("file-upload-message")
+
+    file_upload.addEventListener("change", e =>{
+        file = file_upload.value.split('\\').at(-1)
+        file_ext = file.split('.').at(-1)
+        if (file_ext=='jpeg' || file_ext=='jpg' || file_ext=='png' || file_ext=='gif'){
+            msg.innerHTML= file+" uploaded!"
+        }
+        else{
+            window.alert("only images are allowed")
+        }
+    })
+
+</script>
+
 <script src="{% static 'account/userupdate.js' %}"></script>
 {% endblock headcontent %}
 
@@ -35,6 +52,10 @@
                     </label>
         
                     <input class="hidden" type="file" id="myFile" name="image_upload" >
+                </div>
+
+                <div>
+                    <p id="file-upload-message" class="italic"></p>
                 </div>
      
         </div>

@@ -137,7 +137,8 @@ class UserUpdate(LoginRequiredMixin, View):
         user_details.about_me = request.POST['aboutme']
 
         if 'image_upload' in request.FILES:  
-            user_details.profile_image = request.FILES['image_upload']
+            if str(request.FILES['image_upload']).rsplit('.', 1)[-1] in ['jpeg', 'png', 'gif', 'jpg']:
+                user_details.profile_image = request.FILES['image_upload']
 
         if request.POST['country'] is not '0':
             user_details.location = request.POST['country']

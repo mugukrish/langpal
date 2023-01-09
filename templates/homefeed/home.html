@@ -8,6 +8,25 @@
 <script src={% static 'homefeed/mobilehome.js' %}></script>
 <script src={% static 'homefeed/homemain.js' %}></script>
 
+<script>
+    const file_upload = document.getElementById("myFile")
+    const msg = document.getElementById("file-upload-message")
+
+    file_upload.addEventListener("change", e =>{
+        file = file_upload.value.split('\\').at(-1)
+        file_ext = file.split('.').at(-1)
+        if (file_ext=='jpeg' || file_ext=='jpg' || file_ext=='png' || file_ext=='gif'){
+            msg.innerHTML= file+" uploaded!"
+        }
+        else{
+            window.alert("only images are allowed")
+        }
+    })
+
+</script>
+
+
+
 {% endblock headcontent %}
 
 
@@ -23,13 +42,15 @@
             <div class="flex items-center justify-between">
                 <button class="p-2 place-items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" >Post</button>
                 
-                <input class="hidden" type="file" id="myFile" name="image_upload" >
+                <input class="hidden" type="file" id="myFile" name="image_upload" accept="image/" >
                 
                 <label for="myFile">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
                     </svg>
                 </label>
+
+                
                 <!-- <button id="menu-button" class="right">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
@@ -37,11 +58,17 @@
                 </button> -->
                 
             </div>
+
+            <div>
+                <p id="file-upload-message" class="italic"></p>
+            </div>
         </form>       
     </div>
 
 
     <div><p class="text-3xl mb-6 text-center text-white">Trending posts</p></div>
+    {% get_media_prefix %}{{current_user.profile_image}}
+
     
     	
     <div class="mx-auto p-3">
@@ -54,7 +81,7 @@
 
                     <div class="p-3 bg-slate-400 rounded-xl mb-6" >
                         <div class="flex items-center">
-                            <img class="p-2 shadow rounded-full w-20 border-none" src="{% get_media_prefix %}/blank-profile-picture.png" alt="user-image">
+                            <img class="p-2 shadow rounded-full w-20 border-none" src="{% get_media_prefix %}{{g_posts.profile_image}}" alt="user-image">
                             <p class="p-2 items-center"> {{g_posts.user_name}}</p>
                             <p class="right">{{g_posts.posted_on}}</p>
                         </div>

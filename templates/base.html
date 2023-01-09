@@ -35,7 +35,7 @@
         <li><a href="{% url 'learnbyreading' %}" class="text-3xl">Read</a></li>
         <li><a href="{% url 'about_home' %}" class="text-3xl">About</a></li>
         <li><a href="{% url 'logout_view' %}" class="text-3xl">Logout</a></li>
-        <li><a href="{% url 'userupdate_view' %}" class="text-3xl"><img class="shadow rounded-full w-20 border-none" src="{% get_media_prefix %}/blank-profile-picture.png" alt="user-image"></a></li>
+        <li><a href="{% url 'userupdate_view' %}" class="text-3xl"><img class="shadow rounded-full w-20  border-none" src="{% get_media_prefix %}{{current_user.profile_image}}" alt="user-image"></a></li>
       </ul>
       
 
@@ -58,7 +58,7 @@
     </div>
 
     <!-- menu -->
-    <div class="md:hidden ">
+    <div class="md:hidden">
       <div id="menu" class="hidden absolute flex flex-col items-center self-end  py-8 mt-10 bg-white
       space-y-10 sm:w-auto sm:self-center left-3 right-3
       drop-shadow-md">
@@ -80,6 +80,8 @@
 
 
 <div class="mt-28">
+
+
 
   {% block content %}
   

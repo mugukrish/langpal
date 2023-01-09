@@ -1,7 +1,5 @@
-
 const up_vote = document.querySelectorAll("#post-vote-color-up")
 const down_vote = document.querySelectorAll("#post-vote-color-down")
-
 
 
 for (let el of down_vote){

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -114,6 +115,7 @@ def homefeedview(request):
         data_to_append["vote"] = check_what_vote(i.id, request.user)
         data_to_append["user_name"] = i.user_name
         final_data.append(data_to_append)
+        print(final_data)
 
     # paginator = Paginator(test_data, 3)
 
@@ -128,10 +130,14 @@ def homefeedview(request):
 def postupload(request):
     if request.method == 'POST':
         user_object = User.objects.get(username=request.user)
+        str(request.FILES['image_upload']).rsplit('.', 1)[-1]
         if 'image_upload' in request.FILES:  
-            post_created = UserPostModel(user_name=user_object,
+            if str(request.FILES['image_upload']).rsplit('.', 1)[-1] in ['jpeg', 'png', 'gif', 'jpg']:
+                post_created = UserPostModel(user_name=user_object,
                                     post_text=request.POST['user_post'],
                                     image_post=request.FILES['image_upload'])
+            else:
+                return redirect(homefeedview)
 
         else:
             post_created = UserPostModel(user_name=user_object,
