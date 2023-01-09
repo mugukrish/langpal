@@ -1,29 +1,29 @@
-from django.shortcuts import render, redirect
+from django.conf import settings
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
-
 from django.core.paginator import Paginator
 from django.http import HttpResponse
-from django.contrib.auth.models import User
-
-from account import views
-from .models import UserPostModel, PostVoteUpdate
+from django.shortcuts import render, redirect
 
 import os
 
-from django.conf import settings
+from .models import UserPostModel, PostVoteUpdate
 
 
-
+#check what vote the user has given for a post
 def check_what_vote(post_id, user_id):
-    post_data = PostVoteUpdate.objects.filter(post_id=post_id, user=user_id).first()
+    try:
+        post_data = PostVoteUpdate.objects.filter(post_id=post_id, user=user_id).first()
 
-    if post_data:
-        return post_data.voted_as
-    else:
+        if post_data:
+            return post_data.voted_as
+        else:
+            return None
+    except Exception as e:
         return None
-    
 
+
+@login_required
 def delete_post(request, **kwargs):
     id = kwargs['pk']
     post_details = UserPostModel.objects.get(id=id)
@@ -43,6 +43,7 @@ def check_and_update_post_votes(post_id, user_id, vote_type):
 
     if post_data:
         user_has_voted_for = post_data.voted_as
+        #removes the post vote if user has already voted for it
         if user_has_voted_for==vote_type:
             post_data.delete()
 
@@ -51,14 +52,13 @@ def check_and_update_post_votes(post_id, user_id, vote_type):
     else:
         PostVoteUpdate.objects.create(post_id=post_model, user=user_model, voted_as=vote_type)
         return "first_upvote"
-    
 
 
-
-
+@login_required
 def postupvoteupdate(request, **kwargs):
     id = kwargs['pk']
     post_details = UserPostModel.objects.get(id=id)
+    #upvote_current --> has the total upvote count for the post from post_details
     upvote_current = post_details.upvote_count
 
     if request.method == "GET":
@@ -70,18 +70,19 @@ def postupvoteupdate(request, **kwargs):
             upvote_current +=1
             post_details.upvote_count=upvote_current
             post_details.save()
-        elif user_has_voted_for == 'up':
-            upvote_current -=1
+        elif user_has_voted_for == 'up': 
+            upvote_current -=1 
             post_details.upvote_count=upvote_current
             post_details.save()
         
         return HttpResponse(f'<div class="upvoted" >{upvote_current}<div>')
 
 
-
+@login_required
 def postdownvoteupdate(request, **kwargs):
     id = kwargs['pk']
     post_details = UserPostModel.objects.get(id=id)
+    #downvote_current --> has the total upvote count for the post from post_details
     downvote_current = post_details.downvote_count
 
     if request.method=="GET":
@@ -101,55 +102,32 @@ def postdownvoteupdate(request, **kwargs):
         return HttpResponse(f"<div>{downvote_current}<div>")
 
 
-def temptestview(request):
-    context = {
-        'object': request.user.is_authenticated
-    }
-    return render(request, 'base.html', context)
-
-
+@login_required
 def homefeedview(request):
-    if request.user.is_authenticated:
-        current_user = request.user
-        posts = UserPostModel.objects.all()
-        # paginator = Paginator(posts, 3)
-        test_data = []
+    current_user = request.user
+    posts = UserPostModel.objects.all()
+    # paginator = Paginator(posts, 3)
+    final_data = []
 
-        for i in posts:
-            data_to_append = i.__dict__
-            data_to_append["vote"] = check_what_vote(i.id, request.user)
-            data_to_append["user_name"] = i.user_name
-            test_data.append(data_to_append)
+    for i in posts:
+        data_to_append = i.__dict__
+        data_to_append["vote"] = check_what_vote(i.id, request.user)
+        data_to_append["user_name"] = i.user_name
+        final_data.append(data_to_append)
 
-        paginator = Paginator(test_data, 3)
+    # paginator = Paginator(test_data, 3)
 
-        context = {
-            'c_user':current_user,
-            'post':paginator.page(1),
-            'data':test_data
-        }
-        return render(request, 'homefeed/home.html', context)
-    else:
-        return redirect('account_home_view')
+    context = {
+        'c_user':current_user,
+        'data':final_data, 
+    }
+    return render(request, 'homefeed/home.html', context)
 
 
-# def homefeedview(request):
-#     if request.user.is_authenticated:
-#         current_user = request.user
-#         posts = UserPostModel.objects.all()
-#         context = {
-#             'c_user':current_user,
-#             'post':posts
-#         }
-#         return render(request, 'homefeed/home.html', context)
-#     else:
-#         return redirect('account_home_view')
-    
-
+@login_required
 def postupload(request):
     if request.method == 'POST':
         user_object = User.objects.get(username=request.user)
-        print(request.FILES)
         if 'image_upload' in request.FILES:  
             post_created = UserPostModel(user_name=user_object,
                                     post_text=request.POST['user_post'],

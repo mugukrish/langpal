@@ -1,7 +1,7 @@
 from django.urls import path, include
 
-from . import views
+from .views import return_meaning_from_dictionaryapi
 
 urlpatterns = [
-    path('', views.returnmeaningview, name='wordapp_home'),
+    path('', return_meaning_from_dictionaryapi, name='wordapp_home'),
 ]

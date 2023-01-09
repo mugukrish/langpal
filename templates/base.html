@@ -30,11 +30,14 @@
       {% if request.user.is_authenticated is True %}
       <ul class="hidden md:flex gap-6">
         <li><a href="{% url 'practicehome' %}" class="text-3xl">Practice</a></li>
+        <li><a href="{% url 'all_rooms' %}" class="text-3xl">Chatroom</a></li>
         <li><a href="{% url 'wordapp_home'%}" class="text-3xl">Wordpal</a></li>
         <li><a href="{% url 'learnbyreading' %}" class="text-3xl">Read</a></li>
         <li><a href="{% url 'about_home' %}" class="text-3xl">About</a></li>
         <li><a href="{% url 'logout_view' %}" class="text-3xl">Logout</a></li>
+        <li><a href="{% url 'userupdate_view' %}" class="text-3xl"><img class="shadow rounded-full w-20 border-none" src="{% get_media_prefix %}/blank-profile-picture.png" alt="user-image"></a></li>
       </ul>
+      
 
       <button id="menu-button" class="md:hidden ">
         <div id="menu-open" class="">
@@ -61,9 +64,11 @@
       drop-shadow-md">
         <ul class="">
           <li><a href="{% url 'practicehome' %}" class="text-3xl">Practice</a></li>
+          <li><a href="{% url 'all_rooms' %}" class="text-3xl">Chatroom</a></li>
           <li><a href="{% url 'wordapp_home'%}" class="text-3xl">Wordpal</a></li>
           <li><a href="{% url 'learnbyreading' %}" class="text-3xl">Read</a></li>
           <li><a href="{% url 'about_home' %}" class="text-3xl">About</a></li>
+          <li><a href="{% url 'userupdate_view' %}" class="text-3xl">Profile</a></li>
           <li><a href="{% url 'logout_view' %}" class="text-3xl">Logout</a></li>
         </ul>
       </div>

@@ -1,8 +1,13 @@
+
 function readforme(){
     const synth = window.speechSynthesis;
     const utterThis = new SpeechSynthesisUtterance(document.getElementById("toread").value);
     synth.speak(utterThis);
 
+}
+
+function clearread(){
+    document.getElementById("result").innerHTML =""
 }
 
 const button = document.getElementById("button_sel");

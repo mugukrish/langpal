@@ -4,16 +4,17 @@ import json
 from django.http import JsonResponse
 from .models import GlobalMeaningModel, UserMeaningHistory, MeaningSentences
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
-def returnmeaningview(request):
+@login_required
+def return_meaning_from_dictionaryapi(request):
     context = {'object':{}}
     
-
     if 'meaning_to_search' in request.GET:
         word = request.GET['meaning_to_search'].strip()
 
-        # try to get meaning data from GlobalMeaningModel  
+        #try to get meaning data from GlobalMeaningModel  
         try:
             final_meaning_data = GlobalMeaningModel.objects.get(word=word)
             context = {'object': json.loads(final_meaning_data.meaning), 'word':word}
@@ -21,7 +22,7 @@ def returnmeaningview(request):
         except Exception as ex:
             print(ex)
 
-        # getting data from API
+        #if meaning not stored locally then get data from API
         final_meaning_data = {}
         context = {'object': final_meaning_data, 'word':word}
         new_one = True
@@ -30,6 +31,7 @@ def returnmeaningview(request):
             endpoint = 'https://api.dictionaryapi.dev/api/v2/entries/en/'+word
             get_request = requests.get(endpoint).json()
         except:
+            # redirect to same page id any error occured
             return redirect(request.path)
 
         for item in get_request:

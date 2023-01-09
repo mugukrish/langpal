@@ -2,29 +2,77 @@
 
 {% block content %}
 
-<h3> About </h3>
-<p>We do nothing</p>
-
-
 <div>
-    <h4>Contact us</h4>
+    <div>
+        <h1 class="text-5xl text-center text-white"> About </h1>
+    </div>
+    
+    <div class="p-3 mb-6">
+        <p class="text-white text-justify text-center">This is a language practice website.</p>
+    </div>
+
+
+    <div>
+        <h1 class="text-4xl text-center text-white">Contact us</h1>
+    </div>
+
+
 </div>
 
 
-<div>
-    Request or upvote a feature idea
 
-    <div class="w3-card-4" style="width: 90%; padding: 1%; float: right; margin: 30px;" >
+<div class="p-6" >
 
-        <div class="upload-post">
-            <form action={% url "about_home" %} method="post">{% csrf_token %}
-                <div><input type="text" name="user_idea_post", placeholder="Share an idea..."></div>
-                <div><input type="submit" value="Submit"></div>
-            </form>
-
+    <form class="bg-purple-400 shadow-md rounded px-8 pt-6 pb-8 mb-4"  action={% url "about_idea" %} method="post">{% csrf_token %}
+        <div>
+            <p class="italic p-3">Feel free to submit/request a new feature idea</p> 
         </div>
+        
+        <label for="idea-title">Idea/Request Title</label>
+        <input id="idea-title" name="ideatitle" class="p-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Idea Title">
+        
+        <label for="idea-description">Idea Description</label>
+        <textarea id="idea-description" name="ideadescription" class="p-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Why?.... What for?...." rows="3"></textarea>
+        
+        <div class="flex items-center justify-between mt-3">
+            <button class="p-2 place-items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" >Post Idea</button>            
+        </div>
+    </form>         
+</div>
+
+
+<div class="container">
+
+    <div>
+        <h1 class="text-4xl text-center text-white">Submitted Ideas</h1>
+    </div>
+    
+    <div class="container mb-3 p-3">
+    
+        <div>
+            {% for idea in ideas %}
+            <div class="p-3 bg-slate-400 rounded-xl mb-6">
+                <h1 class="text-3xl p-3">{{idea.idea_title}}</h1>
+                <div class="rounded bg-white">
+                    <p class="p-3">{{idea.idea_text}}</p>
+                </div>
+                
+            </div>
+            {% endfor %}
+    
+        </div>
+            
+    
+    </div>
+    
+
 
 </div>
+
+
+
+
+
 
 
 {% endblock content %}

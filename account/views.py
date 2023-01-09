@@ -1,33 +1,49 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User, auth 
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User, auth 
+from django.http import HttpResponse, Http404
+from django.shortcuts import render, redirect
 from django.views import View
-from django.http import HttpResponse
 
 from .models import UserAccountModel
-from homefeed import views
 
 
-def check_username(request):
-    username = request.POST.get('username')
+#below function checks if username is availabe when enterned in the login form
+def check_if_username_availabe(request):
+    try:
+        username = request.POST.get('username')
 
-    if len(username)<5:
-        return HttpResponse('<div class="text-red-500 italic">Username should contain atleast 5 characters!</div>')
-    if User.objects.filter(username=username).first():
-        return HttpResponse('<div class="text-red-500 italic">Username already taken!</div>')
-    else:
-        return HttpResponse('<div class="text-green-400 italic">Username available!</div>')
+        if len(username)<5:
+            return HttpResponse('<div class="text-red-500 italic">Username should contain atleast 5 characters!</div>')
+        if User.objects.filter(username=username).first():
+            return HttpResponse('<div class="text-red-500 italic">Username already taken!</div>')
+        else:
+            return HttpResponse('<div class="text-green-400 italic">Username available!</div>')
+    except Exception as e:
+        print(e)
+        raise Http404("Page not found")
 
 
+#below function checks if email is availabe when enterned in the login form
 def check_email(request):
-    email = request.POST.get('email')
-    if len(email)>3:
-        if User.objects.filter(email=email).first():
-            return HttpResponse('<div class="text-red-500 italic">email already taken!</div>')
+    try:
+        email = request.POST.get('email')
+        if len(email)>3:
+            if User.objects.filter(email=email).first():
+                return HttpResponse('<div class="text-red-500 italic">email already taken!</div>')
+            else:
+                return HttpResponse("")
         else:
             return HttpResponse("")
-    else:
-        return HttpResponse("")
+    except Exception as e:
+        print(e)
+        raise Http404("Page not found")
+
+
+def logoutview(request):
+    logout(request)
+    return redirect('account_home_view')
 
 
 
@@ -35,9 +51,9 @@ class AccountHomeView(View):
     template = 'account/loginhome.html'
 
     def get(self, request):
-        context = {}
-        print('came here')
-        return render(request, self.template, context)
+        if request.user.is_authenticated:
+            return redirect('homefeed')
+        return render(request, self.template)
 
 
 class SignupView(View):
@@ -79,6 +95,8 @@ class SignupView(View):
             return render(request, self.template)
     
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('login_view')
         return render(request, self.template)
 
 
@@ -100,11 +118,35 @@ class LoginView(View):
         
         if user:
             auth.login(request, user)
-            return redirect(views.homefeedview)
+            return redirect('homefeed')
         return render(request, self.template, {'message':'Username or password is not correct'})
 
 
-def logoutview(request):
-    logout(request)
-    return redirect('account_home_view')
+class UserUpdate(LoginRequiredMixin, View):
+    template = 'account/userupdate.html'
+    
+    def get(self, request):
+        context = {}
+        user_details = UserAccountModel.objects.get(user_name=request.user)
+        context["userdetails"] = user_details
+        return render(request, self.template, context)
+    
+    def post(self, request):
+        context = {}
+        user_details = UserAccountModel.objects.get(user_name=request.user)
+        user_details.about_me = request.POST['aboutme']
+
+        if 'image_upload' in request.FILES:  
+            user_details.profile_image = request.FILES['image_upload']
+
+        if request.POST['country'] is not '0':
+            user_details.location = request.POST['country']
+        else:
+            user_details.location = ''
+
+        user_details.save()
+        context["userdetails"] = user_details
+        return render(request, self.template, context)
+
+
 

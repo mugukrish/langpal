@@ -1,8 +1,9 @@
 from django.urls import path, include
 
-from . import views
+from .views import allroomlist, joinroom, create_room
 
 urlpatterns = [
-    path('', views.allroomlist, name='all_rooms'),
-    path('<slug:slug>/', views.joinroom, name='join_room')
+    path('', allroomlist, name='all_rooms'),
+    path('createroom/', create_room, name='create_room'),
+    path('<slug:slug>/', joinroom, name='join_room')
 ]

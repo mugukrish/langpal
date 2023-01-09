@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import AboutIdeaPostModel
 
-# Register your models here.
+admin.site.register(AboutIdeaPostModel)
+
+
