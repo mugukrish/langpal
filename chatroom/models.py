@@ -8,11 +8,15 @@ class ChatRoomsList(models.Model):
     slug = models.SlugField(unique=True)
     description  = models.TextField(null=True)
     coverimage = models.ImageField(null=True)
+    
+    def __str__(self):
+        return self.slug
 
 class UserMessage(models.Model):
     room = models.ForeignKey(ChatRoomsList, related_name='message', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
+    image_message = models.ImageField(null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:

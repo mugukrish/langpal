@@ -5,6 +5,9 @@ from account.models import UserAccountModel
 def pass_user_profile_detials_tobase(request):
     if request.user.is_authenticated:
         user = User.objects.get(username=request.user)
-        user_details = UserAccountModel.objects.get(user_name=user)
-        return {"current_user":user_details}
-    return {"current_user":None}
+        try:
+            user_details = UserAccountModel.objects.get(user_name=user)
+            return {"current_user":user_details}
+        except Exception as e:
+            pass
+    return {}

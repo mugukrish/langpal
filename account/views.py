@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -5,6 +6,8 @@ from django.contrib.auth.models import User, auth
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.views import View
+
+import os
 
 from .models import UserAccountModel
 
@@ -138,7 +141,11 @@ class UserUpdate(LoginRequiredMixin, View):
 
         if 'image_upload' in request.FILES:  
             if str(request.FILES['image_upload']).rsplit('.', 1)[-1] in ['jpeg', 'png', 'gif', 'jpg']:
+                current_profile_image = user_details.profile_image
                 user_details.profile_image = request.FILES['image_upload']
+                
+
+                
 
         if request.POST['country'] is not '0':
             user_details.location = request.POST['country']
@@ -146,8 +153,11 @@ class UserUpdate(LoginRequiredMixin, View):
             user_details.location = ''
 
         user_details.save()
+
+        # photo is being currently used, should work on the below delete
+        # if 'blank-profile-picture.png' not in current_profile_image:
+        #             os.remove(os.path.join(settings.MEDIA_ROOT, str(current_profile_image)))
         context["userdetails"] = user_details
         return render(request, self.template, context)
-
 
 

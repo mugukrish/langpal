@@ -4,6 +4,8 @@
 
 <!-- below block for script -->
 {% block headcontent %}
+
+<!-- populate the location to the update page -->
 <script>
     const country = document.getElementById('country')
     if ('{{userdetails.location}}'.length<=0){
@@ -15,9 +17,11 @@
 
 </script>
 
+
 <script>
     const file_upload = document.getElementById("myFile")
     const msg = document.getElementById("file-upload-message")
+    const currrent_profile_picture = document.getElementById("profile-picture")
 
     file_upload.addEventListener("change", e =>{
         file = file_upload.value.split('\\').at(-1)
@@ -40,7 +44,7 @@
 {% block content %}
 
 
-<div class=" flex items-center justify-center p-6 ">
+<div class=" flex items-center justify-center p-6 mx-auto max-w-2xl">
     
     <form id="userupdate_form" method="post" class="bg-violet-300 shadow-md rounded px-8 pb-8 pt-8 mb-4" enctype="multipart/form-data"> {% csrf_token %}
 
@@ -48,7 +52,7 @@
             <p class="italic">click below to change profile picture</p>
                 <div>
                     <label for="myFile">
-                        <img class="h-60 object-cover rounded-xl hover:" src="{% get_media_prefix %}{{userdetails.profile_image}}" alt="user-image">
+                        <img id="profile-picture" class="h-60 object-cover rounded-xl hover:" src="{% get_media_prefix %}{{userdetails.profile_image}}" alt="user-image">
                     </label>
         
                     <input class="hidden" type="file" id="myFile" name="image_upload" >
