@@ -130,7 +130,7 @@ def homefeedview(request):
 def postupload(request):
     if request.method == 'POST':
         user_object = User.objects.get(username=request.user)
-        str(request.FILES['image_upload']).rsplit('.', 1)[-1]
+        # str(request.FILES['image_upload']).rsplit('.', 1)[-1]
         if 'image_upload' in request.FILES:  
             if str(request.FILES['image_upload']).rsplit('.', 1)[-1] in ['jpeg', 'png', 'gif', 'jpg']:
                 post_created = UserPostModel(user_name=user_object,
