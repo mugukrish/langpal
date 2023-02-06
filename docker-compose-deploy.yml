@@ -1,38 +1,48 @@
 version: "3.9"
-name: langpal_dev
+
 services:
-  web:
+  app:
     build: .
     ports:
       - "8000:8000"
-    command: python manage.py runserver 0.0.0.0:8000
-
-    # command: gunicorn --bind 0.0.0.0:8000 langpal.wsgi:application
-    # command: /bin/sh -c "entrypoint.sh"
     env_file:
       - .env
     # below for realtime edit. Convenient for develoment
     volumes:
-      - .:/app
+      - static_data:/app/static
+      - media_data:/app/media
     depends_on:
       - db
-      - redis_dev
+  
+  proxy:
+    build:
+      context: ./proxy
+    volumes:
+      - static_data:/app/static
+      - media_data:/app/media
+    ports:
+      - "8080:8080"
+    depends_on:
+      - app
+
   db:
     image: postgres:15-alpine
     volumes:
-      - postgres_data_dev:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
       - "POSTGRES_DB=langpalDB"
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=spiderman" 
-  redis_dev:
-    container_name: 'redis_dev'
+
+  redis:
+    container_name: 'redis'
     image: redis:alpine
     ports: 
       - "6378:6379"
   
 
-
 volumes:
-  postgres_data_dev:
+  static_data:
+  media_data:
+  postgres_data:

@@ -60,11 +60,18 @@
     const userName = JSON.parse(document.getElementById("user_name_id").textContent);
     const chatSocket = new WebSocket(
         'ws://'
-        +window.location.host
+        +'//localhost:8001'
         +'/ws/'
         +roomName
         +'/'
     );
+    // const chatSocket = new WebSocket(
+    //     'ws://'
+    //     +window.location.host
+    //     +'/ws/'
+    //     +roomName
+    //     +'/'
+    // );
     const messageDisplay = document.getElementById("message-display")
     messageDisplay.scrollTo(0,messageDisplay.scrollHeight)
 

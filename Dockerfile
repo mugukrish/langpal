@@ -23,18 +23,24 @@ RUN pip install -r requirements.txt
 COPY . /app/
 COPY ./scripts /scripts
 
+
+
 #permission
 RUN chmod +x /scripts/*
 
 # -p will make sure that the vol/web/ is created
-RUN mkdir -p /vol/web/media
-RUN mkdir -p /vol/web/static
+# RUN mkdir -p /vol/web/media
+# RUN mkdir -p /vol/web/static
 
 # creating a user and providing them access to vol 
-RUN adduser -D user
-RUN chown -R user:user /vol
-RUN chown -R 755 /vol/web
+# RUN adduser -D user
+# RUN chown -R user:user /vol
+# RUN chown -R 755 /vol/web
+# RUN chown -R user:user /app/static/*
+# RUN chown -R 755 /app/*
+# RUN chown -R 755 /app/static/*
 #switching user
-USER user
+# USER user
+USER root
 
 CMD ["entrypoint.sh"]
