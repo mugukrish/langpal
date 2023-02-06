@@ -14,6 +14,22 @@ services:
     depends_on:
       - db
   
+  daphne:
+    build: .
+    restart: always
+    container_name: daphne
+    command: daphne -b 0.0.0.0 -p 8001 langpal.asgi:application
+    volumes: 
+      - static:/app/static
+      - media:/app/media
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+
   proxy:
     build:
       context: ./proxy

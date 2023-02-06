@@ -77,7 +77,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'langpal.wsgi.application'
-ASGI_APPLICATION = 'langpal.asgi.application'
+# ASGI_APPLICATION = 'langpal.asgi.application'
+ASGI_APPLICATION = 'chatroom.routing.application'
 
 CHANNEL_LAYERS = {
     "default": {
