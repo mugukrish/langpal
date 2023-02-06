@@ -1,0 +1,10 @@
+venv/
+git/
+.git
+.gitignore
+
+# Personal help files
+my_help_file.txt
+
+#tailwind
+jstoolchain/
