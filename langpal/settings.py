@@ -170,3 +170,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 
 LOGIN_URL = '/account/'
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost/*']

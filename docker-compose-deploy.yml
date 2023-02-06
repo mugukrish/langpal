@@ -9,8 +9,8 @@ services:
       - .env
     # below for realtime edit. Convenient for develoment
     volumes:
-      - static_data:/app/static
-      - media_data:/app/media
+      - static:/app/static
+      - media:/app/media
     depends_on:
       - db
   
@@ -18,10 +18,10 @@ services:
     build:
       context: ./proxy
     volumes:
-      - static_data:/app/static
-      - media_data:/app/media
+      - static:/app/static
+      - media:/app/media
     ports:
-      - "8080:8080"
+      - "80:80"
     depends_on:
       - app
 
@@ -43,6 +43,6 @@ services:
   
 
 volumes:
-  static_data:
-  media_data:
+  static:
+  media:
   postgres_data:
