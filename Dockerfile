@@ -22,11 +22,11 @@ RUN pip install -r requirements.txt
 # Copy project
 COPY . /app/
 COPY ./scripts /scripts
-
-
+# COPY ./entrypoint.sh /
 
 #permission
-RUN chmod +x /scripts/*
+RUN chmod +x /scripts/entrypoint.sh
+# RUN chmod +x ./entrypoint.sh
 
 # -p will make sure that the vol/web/ is created
 # RUN mkdir -p /vol/web/media
@@ -44,3 +44,4 @@ RUN chmod +x /scripts/*
 USER root
 
 CMD ["entrypoint.sh"]
+# CMD ["/entrypoint.sh"]

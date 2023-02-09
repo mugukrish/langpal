@@ -31,3 +31,5 @@ my_help_file.txt
 
 #tailwind
 jstoolchain/
+
+*.xlsx

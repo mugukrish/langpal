@@ -77,23 +77,29 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'langpal.wsgi.application'
-# ASGI_APPLICATION = 'langpal.asgi.application'
-ASGI_APPLICATION = 'chatroom.routing.application'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis",6379)],
+if os.environ.get("LOCAL_DEV"):
+    ASGI_APPLICATION = 'langpal.asgi.application'
+else:
+    ASGI_APPLICATION = 'chatroom.routing.application'
+
+
+if os.environ.get("LOCAL_DEV"):
+    CHANNEL_LAYERS = {
+        "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }   
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("redis",6379)],
+            },
         },
-    },
-}
+    }
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     }
-# }
 
 
 # Database
@@ -157,8 +163,10 @@ USE_TZ = True
 # STATIC_URL = 'static/'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+if os.environ.get("LOCAL_DEV"):
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -172,4 +180,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 LOGIN_URL = '/account/'
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost/*']
+if os.environ.get("LOCAL_DEV"):
+    CSRF_TRUSTED_ORIGINS = ['http://localhost/*']

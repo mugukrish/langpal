@@ -13,8 +13,11 @@
 
 
 <div class=" flex items-center justify-center p-6 ">
+
+    
     
     <form id="signup_form" method="post" class="bg-violet-300 shadow-md rounded px-8 pb-8 pt-8 mb-4 "> {% csrf_token %}
+      <div><p class="text-red-500 italic">{{fatal_error}}</p></div>  
         <div>
             {% for error, error_value in object.items %}
                 <p class="italic text-red-500">{{error_value}}</p>
@@ -35,9 +38,9 @@
         
       <div class="mb-4"> 
         <label class="block text-gray-700 text-sm font-bold mb-2" for="bod">
-          Bate of Birth
+          Age
         </label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="dob" type="date" >
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="age" type="number" min="3" max="120" value="20" required>
       </div>
 
       <div class="mb-4">
