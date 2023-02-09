@@ -17,20 +17,23 @@ from django.core.asgi import get_asgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "langpal.settings")
 
 
-django.setup()
-application = get_default_application()
 
-# application_soc = get_asgi_application()
-# import chatroom.routing
 
-# application = ProtocolTypeRouter(
-#     {
-#         "http": application_soc,
-#         "websocket":AuthMiddlewareStack(
-#             URLRouter(
-#                 chatroom.routing.websocket_urlpatterns
-#             )
-#         )
-#         # Just HTTP for now. (We can add other protocols later.)
-#     }
-# )
+if os.environ.get("LOCAL_DEV"):
+    application_soc = get_asgi_application()
+    import chatroom.routing
+
+    application = ProtocolTypeRouter(
+        {
+            "http": application_soc,
+            "websocket":AuthMiddlewareStack(
+                URLRouter(
+                    chatroom.routing.websocket_urlpatterns
+                )
+            )
+            # Just HTTP for now. (We can add other protocols later.)
+        }
+    )
+else:
+    django.setup()
+    application = get_default_application()

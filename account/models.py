@@ -16,7 +16,7 @@ class UserAccountModel(models.Model):
     id_user = models.CharField(max_length=50)
     email = models.EmailField(max_length=255, unique=True)
     about_me = models.TextField(blank=True)
-    dob = models.DateField()
+    age = models.IntegerField()
     profile_image = models.ImageField(upload_to=content_file_name, default='blank-profile-picture.png')
     location = models.CharField(max_length=50,blank=True)
 

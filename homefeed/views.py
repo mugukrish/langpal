@@ -130,20 +130,25 @@ def homefeedview(request):
 def postupload(request):
     if request.method == 'POST':
         user_object = User.objects.get(username=request.user)
-        # str(request.FILES['image_upload']).rsplit('.', 1)[-1]
         if 'image_upload' in request.FILES:  
-            if str(request.FILES['image_upload']).rsplit('.', 1)[-1] in ['jpeg', 'png', 'gif', 'jpg']:
-                post_created = UserPostModel(user_name=user_object,
-                                    post_text=request.POST['user_post'],
-                                    image_post=request.FILES['image_upload'])
+            uploaded_file_size = request.FILES['image_upload'].size/ 1024 / 1024
+            if uploaded_file_size<3:
+                if str(request.FILES['image_upload']).rsplit('.', 1)[-1] in ['jpeg', 'png', 'gif', 'jpg']:
+                    post_created = UserPostModel.objects.create(user_name=user_object,
+                                        post_text=request.POST['user_post'],
+                                        image_post=request.FILES['image_upload'])
             else:
                 return redirect(homefeedview)
 
         else:
-            post_created = UserPostModel(user_name=user_object,
-                                        post_text=request.POST['user_post'])
-        
-        post_created.save()
+            post_text = request.POST['user_post']
+            if not set(post_text)=={" "}:
+                if len(post_text):
+                    post_created = UserPostModel.objects.create(user_name=user_object,
+                                                post_text=request.POST['user_post'])
+            # do nothing if text is empty while posting(i.e. if witout a upload)
+            else:
+                pass
         return redirect(homefeedview)
 
 
