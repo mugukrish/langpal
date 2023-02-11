@@ -26,7 +26,7 @@ COPY ./scripts /scripts
 
 #permission
 RUN chmod +x /scripts/entrypoint.sh
-# RUN chmod +x ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
 # -p will make sure that the vol/web/ is created
 # RUN mkdir -p /vol/web/media
@@ -41,7 +41,7 @@ RUN chmod +x /scripts/entrypoint.sh
 # RUN chown -R 755 /app/static/*
 #switching user
 # USER user
-USER root
+# USER root
 
 CMD ["entrypoint.sh"]
 # CMD ["/entrypoint.sh"]
