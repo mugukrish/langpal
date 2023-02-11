@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'daphne',
     'channels',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,23 +78,30 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'langpal.wsgi.application'
-# ASGI_APPLICATION = 'langpal.asgi.application'
-ASGI_APPLICATION = 'chatroom.routing.application'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis",6379)],
+
+if str(os.environ.get("LOCAL_DEV")) == '1':
+    ASGI_APPLICATION = 'langpal.asgi.application'
+else:
+    ASGI_APPLICATION = 'chatroom.routing.application'
+
+
+if str(os.environ.get("LOCAL_DEV")) == '1':
+    CHANNEL_LAYERS = {
+        "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }   
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("redis",6379)],
+            },
         },
-    },
-}
+    }
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#     }
-# }
 
 
 # Database
@@ -155,10 +163,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 # STATIC_URL = 'static/'
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+
+if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+
+    # s3 static settings
+    AWS_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    # MEDIA_URL = 'media/'
+    MEDIA_ROOT = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/media/'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'+'/media'
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+
+if str(os.environ.get("LOCAL_DEV")) == '1':
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -172,4 +205,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 LOGIN_URL = '/account/'
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost/*']
+CSRF_TRUSTED_ORIGINS = ['http://localhost/*', 'http://localhost', 'http://*.compute.amazonaws.com/*']
+

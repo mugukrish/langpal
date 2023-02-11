@@ -14,9 +14,12 @@ from .models import UserAccountModel
 
 #below function checks if username is availabe when enterned in the login form
 def check_if_username_availabe(request):
+    username = request.POST.get('username')
     try:
-        username = request.POST.get('username')
-
+        if len(username)==0:
+            return HttpResponse('<div></div>')
+        if " " in username:
+            return HttpResponse('<div class="text-red-500 italic">Username should not contain blankspaces</div>')
         if len(username)<5:
             return HttpResponse('<div class="text-red-500 italic">Username should contain atleast 5 characters!</div>')
         if User.objects.filter(username=username).first():
@@ -66,11 +69,13 @@ class SignupView(View):
         context = {}
         username = request.POST['username']
         email = request.POST['email'].lower()
-        dob = request.POST['dob']
+        age = request.POST['age']
         password = request.POST['password1']
         password_2 = request.POST['password2']
 
         #validation
+        if " " in username:
+            return render(request, self.template, {'message':'Username should not contain any spaces'})
         if User.objects.filter(username=username).first():
             context['username_exist'] = "User name already exists"
         elif len(username)<5:
@@ -85,17 +90,30 @@ class SignupView(View):
         else:
             context['password_match'] = 'Password does not match'
         
-        
+        if not 3<=int(age)<=120:
+            context['age_match'] = 'Enter a valid age (greater than or equal to 3)'
+
         if len(context)>0:
             return render(request, self.template, context = {'object':context})
         else:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()
+            try:
+                user = User.objects.create_user(username=username, email=email, password=password)
+                user_model = User.objects.get(username=username)
+                profile = UserAccountModel.objects.create(user_name=user_model,email=user_model.email ,id_user=user_model.id, age=age)
+            except Exception as e:
+                try:
+                    user.delete()
+                except Exception as euser:
+                    print(euser)
+                try:
+                    profile.delete()
+                except Exception as eprofile:
+                    print(eprofile)
+                print(e)
+                message = "There was an error while creating the user, kindly try after sometime."
+                return render(request, self.template, context = {'fatal_error':message})
 
-            user_model = User.objects.get(username=username)
-            profile = UserAccountModel.objects.create(user_name=user_model,email=user_model.email ,id_user=user_model.id, dob=dob)
-            profile.save()
-            return render(request, self.template)
+            return redirect('login_view')
     
     def get(self, request):
         if request.user.is_authenticated:
@@ -117,7 +135,6 @@ class LoginView(View):
         password = request.POST['password']
 
         user = auth.authenticate(username=username, password=password)
-        
         
         if user:
             auth.login(request, user)
@@ -143,11 +160,9 @@ class UserUpdate(LoginRequiredMixin, View):
             if str(request.FILES['image_upload']).rsplit('.', 1)[-1] in ['jpeg', 'png', 'gif', 'jpg']:
                 current_profile_image = user_details.profile_image
                 user_details.profile_image = request.FILES['image_upload']
-                
+                     
 
-                
-
-        if request.POST['country'] is not '0':
+        if request.POST['country'] != '0':
             user_details.location = request.POST['country']
         else:
             user_details.location = ''

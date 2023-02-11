@@ -13,13 +13,21 @@
     const msg = document.getElementById("file-upload-message")
 
     file_upload.addEventListener("change", e =>{
+
+        file_size = file_upload.files[0].size / 1024 / 1024;
         file = file_upload.value.split('\\').at(-1)
         file_ext = file.split('.').at(-1)
-        if (file_ext=='jpeg' || file_ext=='jpg' || file_ext=='png' || file_ext=='gif'){
-            msg.innerHTML= file+" uploaded!"
+
+        if (file_size<=3){
+            if (file_ext=='jpeg' || file_ext=='jpg' || file_ext=='png' || file_ext=='gif'){
+                msg.innerHTML= file+" uploaded!"
+            }
+            else{
+                window.alert("only images are allowed")
+            }
         }
         else{
-            window.alert("only images are allowed")
+            window.alert("Image size shoud be less than 3MB")
         }
     })
 

@@ -7,11 +7,13 @@ from .models import ChatRoomsList, UserMessage
 def create_room(request):
     context = {}
     if request.method == 'POST':
-        room_name = name=request.POST['roomname'].strip()
-        if not ChatRoomsList.objects.filter(name=room_name).first():
-            ChatRoomsList.objects.create(name=room_name,
-                                        slug=room_name,
-                                        description=request.POST['roomdescription'])
+        room_name = request.POST['roomname'].strip()
+        if not (set(room_name)=={" "} or len(room_name)==0):
+            slug_name = "_".join(room_name.split(" "))
+            if not ChatRoomsList.objects.filter(slug=slug_name).first():
+                ChatRoomsList.objects.create(name=room_name,
+                                            slug=slug_name,
+                                            description=request.POST['roomdescription'])
     return redirect('all_rooms')
 
 @login_required
@@ -25,10 +27,11 @@ def allroomlist(request):
 def joinroom(request, slug):
     context = {}
     room = ChatRoomsList.objects.get(slug=slug)
-    messages_history = UserMessage.objects.filter(room=room).order_by('-date_added')
+    messages_history = UserMessage.objects.filter(room=room).order_by('date_added')
     context['current_user_from_view'] = str(request.user)
     context['room'] = room
     context['old_messages'] = messages_history
+    
 
 
     return render(request, 'chatroom/joinroom.html', context)

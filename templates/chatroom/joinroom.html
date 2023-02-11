@@ -19,16 +19,15 @@
 <div class="">
 
 
-    <div id="message-display" class="mx-auto w-4/5 bg-gray-50 h-72 overflow-y-auto rounded">
+    <div id="message-display" class="break-words mx-auto w-4/5 bg-gray-50 h-72 overflow-y-auto rounded">
         {% for usr_msg in old_messages %}
-    
         <div class="p-3">
-            <div class="flex ">
+            <div class="flex">
                 <!-- <div class="mr-3">
                     <img src="{% get_media_prefix %}{{current_user.profile_image}}" alt="My profile" class="w-6 h-6 rounded-full">
                 </div> -->
                 <div class="flex flex-col space-y-2 text-md max-w-xs mx-2 bg-gray-500 rounded p-2">
-                    <div><p class="italic font-bold">{{usr_msg.user}}</p></div>
+                    <div><p class="italic font-bold">{{usr_msg.user}} <span class="float-right italic text-xs font-normal text-right">  {{usr_msg.date_added}}</span></p></div>
                     <div><span class="px-4 py-2 rounded-lg inline-bloc text-white">{{usr_msg.message}}</span></div>
                 </div>
             </div>
@@ -40,10 +39,15 @@
 
     <div class="max-w-2xl mx-auto">
         <div class="flex items-center py-2 px-3 bg-gray-50 rounded-lg dark:bg-gray-700">
+            
             <button type="button" class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                <input class="hidden" type="file" id="chat-image" name="image_upload" accept="image/" >
+                <label for="chat-image">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                </label>
             </button>
-
+                
+            
             <textarea id="text-message" rows="1" class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea> 
             <button id="submit-text" class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
                 <svg class="w-6 h-6 rotate-90" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
@@ -54,24 +58,28 @@
 
 </div>
  
-
+<!-- max-w-xs -->
 <script>
     const roomName = JSON.parse(document.getElementById("room_name_id").textContent); 
     const userName = JSON.parse(document.getElementById("user_name_id").textContent);
+    
     const chatSocket = new WebSocket(
         'ws://'
-        +'//localhost'
+        +window.location.host
         +'/ws/'
         +roomName
         +'/'
     );
+
+    // used for development environment
     // const chatSocket = new WebSocket(
     //     'ws://'
-    //     +window.location.host
+    //     +'//localhost'
     //     +'/ws/'
     //     +roomName
     //     +'/'
     // );
+    
     const messageDisplay = document.getElementById("message-display")
     messageDisplay.scrollTo(0,messageDisplay.scrollHeight)
 
@@ -80,7 +88,7 @@
         if (data.user_message){
             document.querySelector('#message-display').innerHTML += `<div class="p-3">
                             <div class="flex">
-                                <div class="flex flex-col space-y-2 text-md max-w-xs mx-2 bg-gray-500 rounded p-2">
+                                <div class="flex flex-col space-y-2 text-md  mx-2 bg-gray-500 rounded p-2">
                                     <div><p class="italic font-bold">`+ data.sent_by_user +`</p></div>
                                     <div><span class="px-4 py-2 rounded-lg inline-bloc text-white">`+ data.user_message +`</span></div>
                                 </div>
@@ -99,14 +107,16 @@
     document.querySelector("#submit-text").onclick = function (){
         const textMessageDom = document.querySelector('#text-message');
         const textMessage = textMessageDom.value;
-        console.log(textMessageDom, textMessage)
-
+        if (textMessage.length>1) {
         chatSocket.send(JSON.stringify({
             'message':textMessage,
             'username':userName
         }));
 
         textMessageDom.value = '';
+
+        }
+       
         
     
     };
