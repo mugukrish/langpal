@@ -41,9 +41,12 @@ RUN adduser -D user
 RUN chown -R user:user /app/static/
 RUN chown -R user:user /app/staticfiles/
 RUN chown -R user:user /app/media/
-RUN chown -R 755 /app/static/*
-RUN chown -R 755 /app/media/*
-RUN chown -R 755 /app/staticfiles/*
+RUN chown -R user:user /app/
+
+RUN chmod -R 777 /app/*
+RUN chmod -R 777 /app/static/*
+RUN chmod -R 777 /app/media/*
+RUN chmod -R 777 /app/staticfiles/*
 USER user
 
 CMD ["entrypoint.sh"]
