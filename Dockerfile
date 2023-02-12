@@ -34,6 +34,8 @@ RUN chmod +x /scripts/entrypoint.sh
 
 # creating a user and providing them access to vol 
 RUN mkdir -p /app/staticfiles/temp
+RUN mkdir -p /app/static/this_is_a_temp
+RUN mkdir -p /app/media/this_is_a_temp
 
 RUN adduser -D user
 RUN chown -R user:user /app/static/

@@ -205,5 +205,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 LOGIN_URL = '/account/'
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost/*', 'http://localhost', 'http://*.compute.amazonaws.com/*']
+CSRF_TRUSTED_ORIGINS = ['https://*.thelangbud.in','https://thelangbud.in/*', 'http://thelangbud.in*', 'http://*.compute.amazonaws.com/*']
 
