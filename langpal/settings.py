@@ -79,28 +79,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'langpal.wsgi.application'
 
-
 if str(os.environ.get("LOCAL_DEV")) == '1':
     ASGI_APPLICATION = 'langpal.asgi.application'
 else:
     ASGI_APPLICATION = 'chatroom.routing.application'
 
 
-if str(os.environ.get("LOCAL_DEV")) == '1':
-    CHANNEL_LAYERS = {
-        "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-        }
-    }   
-else:
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [("redis",6379)],
-            },
-        },
-    }
+# if str(os.environ.get("LOCAL_DEV")) == '1':
+#     CHANNEL_LAYERS = {
+#         "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer"
+#         }
+#     }   
+# else:
+#     CHANNEL_LAYERS = {
+#         "default": {
+#             "BACKEND": "channels_redis.core.RedisChannelLayer",
+#             "CONFIG": {
+#                 "hosts": [("redis",6379)],
+#             },
+#         },
+#     }
 
 
 
@@ -114,18 +113,16 @@ else:
 #     }
 # }
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-       'NAME': os.environ.get('NAME'),
-       'USER': os.environ.get('USER'),
-       'PASSWORD': os.environ.get('PASSWORD'),
-       'HOST': os.environ.get('HOST'),
-       'PORT': os.environ.get('PORT')
-   }
-}
-
-
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': os.environ.get('NAME'),
+#        'USER': os.environ.get('USER'),
+#        'PASSWORD': os.environ.get('PASSWORD'),
+#        'HOST': os.environ.get('HOST'),
+#        'PORT': os.environ.get('PORT')
+#    }
+# }
 
 
 # Password validation
@@ -158,52 +155,102 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-# STATIC_URL = 'static/'
-
-
-if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
-    # aws settings
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-    
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-
-
-    # s3 static settings
-    AWS_LOCATION = 'static'
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-    # MEDIA_URL = 'media/'
-    MEDIA_ROOT = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/media/'
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'+'/media'
-else:
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
-
-if str(os.environ.get("LOCAL_DEV")) == '1':
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
-
 
 LOGIN_URL = '/account/'
 
-CSRF_TRUSTED_ORIGINS = ['https://*.thelangbud.in','https://thelangbud.in/*', 'http://thelangbud.in*', 'http://*.compute.amazonaws.com/*']
 
+
+if str(os.environ.get("LOCAL_DEV")) == '1':
+    CSRF_TRUSTED_ORIGINS = ['localhost/*', 'http://localhost/*']
+
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'staticfiles'),)
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
+
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("redis",6379)],
+            },
+        },
+    }
+
+
+
+if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
+    CSRF_TRUSTED_ORIGINS = ['https://*.thelangbud.in',
+                            'https://thelangbud.in/*', 
+                            'http://thelangbud.in/*',
+                            'http://*.compute.amazonaws.com/*']
+
+    # To connect with AWS RDB
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'spiderman',
+        'HOST': 'database-1.cn9vhlukwmqx.ap-south-1.rds.amazonaws.com',
+        'PORT': '5432'
+        }
+    }
+
+
+
+    CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
+                "CONFIG": {
+                    "hosts": [("langpal-production.cfjq28.ng.0001.aps1.cache.amazonaws.com",6379)],
+                },
+        },
+    }
+
+    #AWS S3
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = 'public-read'
+
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+    # s3 static settings
+    AWS_LOCATION = 'static'
+
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    MEDIA_ROOT = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+
+
+
+
+
+    # AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    # AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    # AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    
+    # AWS_DEFAULT_ACL = 'public-read'
+    # AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    # AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+    # # s3 static settings
+    # AWS_LOCATION = 'static'
+    # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    # # MEDIA_URL = 'media/'
+    # MEDIA_ROOT = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/media/'
+    # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'+'/media'
