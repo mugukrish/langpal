@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-# Create your models here.
+# Model to store extra data of the registered users
 class UserAccountModel(models.Model):
 
     #below function will change the image name before saving

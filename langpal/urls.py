@@ -12,6 +12,7 @@ urlpatterns = [
     path('chatroom/', include('chatroom.urls')),
     path('', include('homefeed.urls')),
     path('homefeed/', include('homefeed.urls')),
+    path('portfolio/', include('portfolio.urls')),
 
 
 ]

@@ -79,50 +79,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'langpal.wsgi.application'
 
-if str(os.environ.get("LOCAL_DEV")) == '1':
+if (str(os.environ.get("LOCAL_DEV")) == '1') or str(os.environ.get("DEVELOPMENT_LOCAL_PYS") == '1'):
     ASGI_APPLICATION = 'langpal.asgi.application'
 else:
     ASGI_APPLICATION = 'chatroom.routing.application'
 
-
-# if str(os.environ.get("LOCAL_DEV")) == '1':
-#     CHANNEL_LAYERS = {
-#         "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer"
-#         }
-#     }   
-# else:
-#     CHANNEL_LAYERS = {
-#         "default": {
-#             "BACKEND": "channels_redis.core.RedisChannelLayer",
-#             "CONFIG": {
-#                 "hosts": [("redis",6379)],
-#             },
-#         },
-#     }
-
-
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': os.environ.get('NAME'),
-#        'USER': os.environ.get('USER'),
-#        'PASSWORD': os.environ.get('PASSWORD'),
-#        'HOST': os.environ.get('HOST'),
-#        'PORT': os.environ.get('PORT')
-#    }
-# }
 
 
 # Password validation
@@ -161,6 +122,35 @@ LOGIN_URL = '/account/'
 
 
 
+#to run with python manage runserver for local developmet
+if str(os.environ.get('DEVELOPMENT_LOCAL_PYS')==1):
+
+    CHANNEL_LAYERS = {
+        "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }  
+
+    DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': os.environ.get('NAME'),
+           'USER': os.environ.get('USER'),
+           'PASSWORD': os.environ.get('PASSWORD'),
+           'HOST': os.environ.get('HOST'),
+           'PORT': os.environ.get('PORT')
+       }
+    }
+
+    STATIC_URL = '/static/'
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
+
+
+#to run in a full docker container (nginx, daphne, gunicorn, redis, postgres)
 if str(os.environ.get("LOCAL_DEV")) == '1':
     CSRF_TRUSTED_ORIGINS = ['localhost/*', 'http://localhost/*']
 
@@ -180,8 +170,19 @@ if str(os.environ.get("LOCAL_DEV")) == '1':
         },
     }
 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('NAME'),
+            'USER': os.environ.get('USER'),
+            'PASSWORD': os.environ.get('PASSWORD'),
+            'HOST': os.environ.get('HOST'),
+            'PORT': os.environ.get('PORT')
+        }
+    }
 
 
+#to run the app using AWS services
 if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
     CSRF_TRUSTED_ORIGINS = ['https://*.thelangbud.in',
                             'https://thelangbud.in/*', 
@@ -199,7 +200,6 @@ if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
         'PORT': '5432'
         }
     }
-
 
 
     CHANNEL_LAYERS = {

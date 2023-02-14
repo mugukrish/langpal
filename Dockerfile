@@ -29,18 +29,17 @@ COPY ./scripts /scripts
 RUN chmod +x /scripts/entrypoint.sh
 
 # creating a user and providing them access to vol 
-RUN mkdir -p /app/staticfiles/temp  
-RUN mkdir -p /app/static/this_is_a_temp
-RUN mkdir -p /app/media/this_is_a_temp
+# RUN mkdir -p /app/staticfiles/temp  
+# RUN mkdir -p /app/static/this_is_a_temp
+# RUN mkdir -p /app/media/this_is_a_temp
 
-RUN adduser -D user
-RUN chown -R user:user /app/static/*
-RUN chown -R user:user /app/staticfiles/*
-RUN chown -R user:user /app/media/*
-RUN chmod -R 777 /app/static/*
-RUN chmod -R 777 /app/media/*
-RUN chmod -R 777 /app/staticfiles/*
+# RUN adduser -D user
+# RUN chown -R user:user /app/static/*
+# RUN chown -R user:user /app/staticfiles/*
+# RUN chown -R user:user /app/media/*
+# RUN chmod -R 777 /app/static/*
+# RUN chmod -R 777 /app/media/*
+# RUN chmod -R 777 /app/staticfiles/*
 # USER user
 
-CMD ["entrypoint.sh"]
-# CMD ["/entrypoint.sh"]
+# CMD ["entrypoint.sh"]

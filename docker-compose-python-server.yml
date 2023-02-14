@@ -6,9 +6,6 @@ services:
     ports:
       - "8000:8000"
     command: python manage.py runserver 0.0.0.0:8000
-
-    # command: gunicorn --bind 0.0.0.0:8000 langpal.wsgi:application
-    # command: /bin/sh -c "entrypoint.sh"
     env_file:
       - .env
     # below for realtime edit. Convenient for develoment

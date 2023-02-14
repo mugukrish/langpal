@@ -32,6 +32,4 @@ def joinroom(request, slug):
     context['room'] = room
     context['old_messages'] = messages_history
     
-
-
     return render(request, 'chatroom/joinroom.html', context)

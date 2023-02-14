@@ -115,7 +115,6 @@ def homefeedview(request):
         data_to_append["vote"] = check_what_vote(i.id, request.user)
         data_to_append["user_name"] = i.user_name
         final_data.append(data_to_append)
-        print(final_data)
 
     # paginator = Paginator(test_data, 3)
 
