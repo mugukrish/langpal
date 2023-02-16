@@ -10,6 +10,8 @@ import os
 
 from .models import UserPostModel, PostVoteUpdate
 
+from account.models import UserAccountModel
+
 
 #check what vote the user has given for a post
 def check_what_vote(post_id, user_id):
@@ -29,14 +31,18 @@ def delete_post(request, **kwargs):
     id = kwargs['pk']
     post_details = UserPostModel.objects.get(id=id)
     file_name = post_details.image_post
-    post_details.delete()
+    try:
+        post_details.delete()
+    except Exception as e:
+        print (e)
+
     if file_name:
         if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
             import boto3
             s3_client = boto3.resource('s3',
                              aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
                              aws_secret_access_key= os.environ.get('AWS_SECRET_ACCESS_KEY'))
-            key = 'static/'+file_name
+            key = 'static/'+str(file_name)
             my_object = s3_client.Object(os.environ.get('AWS_STORAGE_BUCKET_NAME'), key)
             a = my_object.delete()
 
@@ -124,6 +130,12 @@ def homefeedview(request):
         data_to_append = i.__dict__
         data_to_append["vote"] = check_what_vote(i.id, request.user)
         data_to_append["user_name"] = i.user_name
+        print("----->",dir(UserAccountModel.objects.get(user_name=i.user_name).profile_image))
+        try:
+            data_to_append["user_image"] = str(UserAccountModel.objects.get(user_name=i.user_name).profile_image)
+            print(data_to_append)
+        except Exception as e:
+            print(e)
         final_data.append(data_to_append)
 
     # paginator = Paginator(test_data, 3)
