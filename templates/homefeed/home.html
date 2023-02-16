@@ -88,15 +88,24 @@
 
                     <div class="p-3 bg-slate-400 rounded-xl mb-6" >
                         <div class="flex items-center">
-                            <img class="p-2 shadow rounded-full w-20 border-none" src="{% get_media_prefix %}{{current_user.profile_image}}" alt="user-image">
+                            <!-- <img class="p-2 shadow rounded-full w-20 border-none" src="{% get_media_prefix %}{{current_user.profile_image}}" alt="user-image"> -->
+                            <div class="image-cropper">
+                                <a href="{% url 'userupdate_view' %}"><img class="" src="{% get_media_prefix %}{{current_user.profile_image}}" alt="user-image"></a>
+                            </div>
+                            
                             <p class="p-2"> {{g_posts.user_name}}</p>
-                            <p class="">{{g_posts.posted_on}}</p>
+                            <p class="float-right"> ||  {{g_posts.posted_on}}</p>
+                            <!-- <div class="float-right"><p class="float-right">{{g_posts.posted_on}}</p></div> -->
                         </div>
+
+                        
 
                         {% if g_posts.image_post %}
                             <div class="pt-2 grid place-items-center">
                                 <img class="h-60 object-cover rounded-xl" src="{% get_media_prefix %}{{g_posts.image_post}}" alt="user_post">
                             </div>
+
+
                             <div class="p-6">{{g_posts.post_text}}</div>
                         {% else %}
                             <div class="p-3">
@@ -106,7 +115,7 @@
                         
                         
 
-                        <div id="votebutton" class="flex p-2 border rounded" >
+                        <div id="votebutton" class="flex items-center p-2 border rounded" >
                             
                             <div class="flex p-2">
                                 <button id="upvote-button" hx-post={% url 'upvote' g_posts.id %} hx-target="#upvote-counthtmx{{g_posts.id}}">
