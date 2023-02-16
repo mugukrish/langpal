@@ -5,7 +5,7 @@ import datetime
 
 User = get_user_model()
 
-
+#model to store feedback/feature ideas that can be submitted in about page
 class AboutIdeaPostModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user_name = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -8,11 +8,14 @@ from .models import AboutIdeaPostModel
 @login_required()
 def post_idea_from_about(request):
     if request.method == 'POST':
-        user_model = User.objects.get(username=request.user)
-        AboutIdeaPostModel.objects.create(user_name=user_model,
-                                        idea_title = request.POST['ideatitle'],
-                                        idea_text=request.POST['ideadescription']
-                                        )
+        try:
+            user_model = User.objects.get(username=request.user)
+            AboutIdeaPostModel.objects.create(user_name=user_model,
+                                            idea_title = request.POST['ideatitle'],
+                                            idea_text=request.POST['ideadescription']
+                                            )
+        except Exception as e:
+            print(e) 
         return redirect('about_home')
     return redirect('about_home')
 
@@ -23,6 +26,7 @@ def about_page(request):
     return render(request, 'about/about_no.html', context)
 
 
+# Update like count on the idea(obe user can vote unlimited times)
 def update_idea_vote_count(request, **kwargs):
     current_idea = AboutIdeaPostModel.objects.get(id=kwargs['pk'])
     current_votes_for_idea = current_idea.idea_votes

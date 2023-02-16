@@ -40,7 +40,6 @@ RUN chown -R user:user /app/media/*
 RUN chmod -R 777 /app/static/*
 RUN chmod -R 777 /app/media/*
 RUN chmod -R 777 /app/staticfiles/*
-# USER user
+USER user
 
 CMD ["entrypoint.sh"]
-# CMD ["/entrypoint.sh"]
