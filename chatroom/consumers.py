@@ -39,6 +39,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_name,
             self.channel_name
         )
+        raise StopConsumer()
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
