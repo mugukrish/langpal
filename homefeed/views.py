@@ -31,7 +31,17 @@ def delete_post(request, **kwargs):
     file_name = post_details.image_post
     post_details.delete()
     if file_name:
-        os.remove(os.path.join(settings.MEDIA_ROOT, str(file_name)))
+        if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
+            import boto3
+            s3_client = boto3.resource('s3',
+                             aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
+                             aws_secret_access_key= os.environ.get('AWS_SECRET_ACCESS_KEY'))
+            key = 'static/'+file_name
+            my_object = s3_client.Object(os.environ.get('AWS_STORAGE_BUCKET_NAME'), key)
+            a = my_object.delete()
+
+        else:
+            os.remove(os.path.join(settings.MEDIA_ROOT, str(file_name)))
     return  HttpResponse(f"<div><div>")
 
 
