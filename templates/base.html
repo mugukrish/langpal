@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>langpal| Welcome</title>
+<title>thelangbud</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
@@ -24,7 +24,7 @@
     <div class="flex items-center justify-between">
 
       <div>
-        <a href="{% url 'homefeed' %}" class="text-4xl">langpal</a>
+        <a href="{% url 'homefeed' %}" class="text-4xl">thelangbud</a>
       </div>
       
       {% if request.user.is_authenticated is True %}
@@ -35,7 +35,12 @@
         <li><a href="{% url 'wordapp_home'%}" >Wordpal</a></li>
         <li><a href="{% url 'about_home' %}" >About</a></li>
         <li><a href="{% url 'logout_view' %}" >Logout</a></li>
-        <li><a href="{% url 'userupdate_view' %}"><img class="shadow rounded-full w-20  border-none" src="{% get_media_prefix %}{{current_user.profile_image}}" alt="user"></a></li>
+        <!-- <li><a href="{% url 'userupdate_view' %}"><img class="shadow rounded-full border-none" src="{% get_media_prefix %}{{current_user.profile_image}}" alt="user" width="40"></a></li> -->
+        <li>
+          <div class="image-cropper">
+            <a href="{% url 'userupdate_view' %}"><img class="" src="{% get_media_prefix %}{{current_user.profile_image}}" alt="user"></a>
+          </div>
+        </li>
       </ul>
       
 
@@ -104,6 +109,21 @@
     left:0;
     bottom:0;
     background-color:rgba(0,0,0,.5)
+  }
+
+  .image-cropper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  }
+
+  img {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
   }
 
 </style>

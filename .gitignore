@@ -33,3 +33,5 @@ my_help_file.txt
 jstoolchain/
 
 *.xlsx
+*.docx
+~WRL1092.tmp

@@ -1,14 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html>
+  <head>
+    <title>Mugunth Krishnamurthi</title>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
 
-<h1>Portfolio home</h1>
+    {% load static %}
+
+    <link rel="stylesheet" href={% static 'main.css' %}>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+
+  </head>
+
+  <body class="bg-gradient-to-l from-gray-900 via-purple-900 to-violet-600">
     
-</body>
+    <nav class="fixed top-0 left-0 right-0 w-[100%] mx-auto bg-red-500 p-6 text-4xl"> 
+
+      <div>
+        <p class="text-4xl inline-block">Mugunth Krishnamurthi</p>
+        <a href="https://thelangbud.in/"><p class="text-4xl float-right">langbud.in</p></a>
+      </div>
+
+    </nav>
+        
+
+    <div class="text-black mt-28 container p-10 mx-auto  bg-slate-400" >
+
+      <div>
+        <p class="text-2xl">Tools used to build the website</p>
+      </div>
+
+  
+      <ul class="list-disc p-5">
+        <li>Django Framework</li>
+        <li>Javascript </li>
+        <li>HTMLX</li>
+        <li>Tailwind CSS - Styling the website</li>
+        <li>NGINX - Proxy server</li>
+        <li>PostgreSQL - Database</li>
+        <li>GIT - Version control</li>
+        <li>Docker</li>
+      </ul>
+      
+     
+      <div>
+        <p class="text-2xl">Hosting</p>
+      </div>
+
+  
+      <ul class="list-disc p-5">
+        <li>AWS - Website hosting</li>
+        <li>AWS EC2 instance - To run Docker container</li>
+        <li>AWS RDS – Postgres SQL</li>
+        <li>AWS S3 - To store static and media files</li>
+        <li>AWS ElastiCache - Redis has been used for channels</li>
+      </ul>
+
+
+      <div><p class="text-4xl mb-5">About me</p></div>
+      <div><p class="text-2xl mb-5">Experience</p></div>
+      <div><p class=>Previous organization: IBM India Private Limited</p></div>
+      <div><p class=>Years of actual work experience: 3 years and 2 months (August 2019 – September 2022)</p></div>
+      <div><p class=>Experience in: SAP BASIS(Transports) and SAP Security.</p></div>
+
+      <br>
+      
+      <div><p class="text-2xl">What did I do?</p></div>
+
+      <ul class="list-disc p-5">
+        <li>Transported changes and new customization from one environment to another (Development, Test,
+          Pre-production, Production).</li>
+        <li>Rectified/troubleshoot issues in the system and investigate the root cause.</li>
+        <li>Collaborate with developers and functional users to provide system enhancement as per business
+          process.</li>
+        <li>Connect with the end-users to collect the requirement and provide the requirement as per process.</li>
+        <li>Tracked and managed Design Governance and Test Summary Reports for project releases.</li>
+        <li>Monitored and performed configuration changes to maintain the stability of the system.</li>
+        <li>Understood the end user's job roles and provided appropriate access as per their requirements.</li>
+        <li>Resolved issues related to user administration and access/authorizations.</li>
+        <li>Followed the business process for user and access administrations.</li>
+        <li>Documented SAP Transports and SAP Security-related issues, and techniques for further reference.</li>
+      </ul>
+
+      <br>
+
+      <div><p class="text-2xl mb-5">What can I do for the company?</p></div>
+
+      <div><p>I’m not an expert when it comes to software development, but I like the idea of literally creating anything with machines and software tools. This idea is what helps me to love software development.</p></div>
+      <br>
+      <div><p>I have managed to build projects solely relying on my ability to understand and learn (mostly from the internet). My previous experience may not be of help when it comes to technical, but I can assure you that I’ll be able to work with minimal guidance.</p></div>
+
+      <br>
+      <div><p class="text-2xl">Skills</p></div>
+
+      <ul class="list-disc p-5">
+        <li>SAP BASIS and Security</li>
+        <li>Computer Programming (Python, C)</li>
+        <li>Data Analysis (Pandas, matplotlib)</li>
+        <li>SQL</li>
+        <li>Version Control (GIT)</li>
+        <li>Django (Intermediate)</li>
+      </ul>
+      
+      <br>
+      <div><p class="text-2xl mt-2 font-semibold">TL;DR - <span class="font-normal">I need a job</span> </p> </div>
+      
+
+    </div>
+
+
+  </body>
+
+
 </html>
