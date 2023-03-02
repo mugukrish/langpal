@@ -193,11 +193,11 @@ if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'spiderman',
-        'HOST': 'database-1.cn9vhlukwmqx.ap-south-1.rds.amazonaws.com',
-        'PORT': '5432'
+        'NAME': os.environ.get('AWS_NAME'),
+        'USER': os.environ.get('AWS_USER'),
+        'PASSWORD': os.environ.get('AWS_PASSWORD'),
+        'HOST': os.environ.get('AWS_HOST'),
+        'PORT': os.environ.get('AWS_PORT')
         }
     }
 
@@ -206,10 +206,12 @@ if str(os.environ.get("USE_PRODUCTION_SERVICES")) == '1':
             "default": {
                 "BACKEND": "channels_redis.core.RedisChannelLayer",
                 "CONFIG": {
-                    "hosts": [("langpal-production.cfjq28.ng.0001.aps1.cache.amazonaws.com",6379)],
+                    "hosts": [(os.environ.get('REDIS_HOST'),int(os.environ.get('REDIS_PORT')))],
                 },
         },
     }
+
+    
 
     #AWS S3
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
